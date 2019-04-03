@@ -1,0 +1,298 @@
+﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="UseCase2_Process" mva:VisualBasic.Settings="{x:Null}" sap2010:WorkflowViewState.IdRef="UseCase2_Process_1"
+ xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
+ xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+ xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities"
+ xmlns:njl="clr-namespace:Newtonsoft.Json.Linq;assembly=Newtonsoft.Json"
+ xmlns:s="clr-namespace:System;assembly=mscorlib"
+ xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger"
+ xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
+ xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
+ xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+ xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib"
+ xmlns:sd="clr-namespace:System.Data;assembly=System.Data"
+ xmlns:ui="http://schemas.uipath.com/workflow/activities"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <TextExpression.NamespacesForImplementation>
+    <sco:Collection x:TypeArguments="x:String">
+      <x:String>System.Activities.XamlIntegration</x:String>
+      <x:String>System.Activities.Validation</x:String>
+      <x:String>System.Activities</x:String>
+      <x:String>System.Activities.Statements</x:String>
+      <x:String>System.Activities.Expressions</x:String>
+      <x:String>Microsoft.VisualBasic</x:String>
+      <x:String>Microsoft.VisualBasic.Activities</x:String>
+      <x:String>System</x:String>
+      <x:String>System.Collections</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Diagnostics</x:String>
+      <x:String>System.Drawing</x:String>
+      <x:String>System.IO</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Net.Mail</x:String>
+      <x:String>System.Xml</x:String>
+      <x:String>System.Xml.Linq</x:String>
+      <x:String>UiPath.Core</x:String>
+      <x:String>UiPath.Core.Activities</x:String>
+      <x:String>System.Windows.Markup</x:String>
+      <x:String>Newtonsoft.Json.Linq</x:String>
+      <x:String>Newtonsoft.Json</x:String>
+      <x:String>Microsoft.VisualBasic.CompilerServices</x:String>
+      <x:String>System.Xml.Serialization</x:String>
+    </sco:Collection>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>Microsoft.VisualBasic</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Drawing</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>PresentationFramework</AssemblyReference>
+      <AssemblyReference>WindowsBase</AssemblyReference>
+      <AssemblyReference>PresentationCore</AssemblyReference>
+      <AssemblyReference>System.Xaml</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.Composition</AssemblyReference>
+      <AssemblyReference>System.ServiceModel</AssemblyReference>
+      <AssemblyReference>UiPath.Cryptography</AssemblyReference>
+      <AssemblyReference>System.ValueTuple</AssemblyReference>
+      <AssemblyReference>Newtonsoft.Json</AssemblyReference>
+      <AssemblyReference>UiPath.Excel</AssemblyReference>
+      <AssemblyReference>UiPath.Mail</AssemblyReference>
+      <AssemblyReference>System.Collections.Immutable</AssemblyReference>
+      <AssemblyReference>System.Data.DataSetExtensions</AssemblyReference>
+      <AssemblyReference>UiPath.System.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.UiAutomation.Activities</AssemblyReference>
+    </sco:Collection>
+  </TextExpression.ReferencesForImplementation>
+  <Sequence sap2010:Annotation.AnnotationText="Several operations are implemented into this workflow:&#xA;1. Gets the list of tasks&#xA;2. For each task:&#xA;2.1. Print details&#xA;2.2. Check number of users&#xA;2.2.a Maximum 5 users&#xA;2.2.a.1. Get request item variables with details for each user&#xA;2.2.a.2. Print details for each user&#xA;2.2.b. More than 5 users&#xA;2.2.b.1 Download attachments, if any&#xA;2.3 Update details.&#xA;&#xA;To find out the value needed by the Query parameter of the DownloadTaskList workflow, you can filter the table as required in the Service Now website and then right click on the last filter and select &quot;Copy query&quot;." DisplayName="UseCase2_Process" sap2010:WorkflowViewState.IdRef="Sequence_1">
+    <Sequence.Variables>
+      <Variable x:TypeArguments="x:String" Name="ServiceNowUrl" />
+      <Variable x:TypeArguments="x:String" Name="Username" />
+      <Variable x:TypeArguments="x:String" Name="Password" />
+      <Variable x:TypeArguments="x:Int32" Name="statusCode" />
+      <Variable x:TypeArguments="njl:JArray" Name="TasksList" />
+      <Variable x:TypeArguments="x:String" Name="TaskListQuery" />
+    </Sequence.Variables>
+    <Sequence DisplayName="Get ServiceNow config values" sap2010:WorkflowViewState.IdRef="Sequence_6">
+      <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke GetConfigValues workflow" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_9" UnSafe="False" WorkflowFileName="Test\_GetConfigValues.xaml">
+        <ui:InvokeWorkflowFile.Arguments>
+          <OutArgument x:TypeArguments="x:String" x:Key="ServiceNowUrl">[ServiceNowUrl]</OutArgument>
+          <OutArgument x:TypeArguments="x:String" x:Key="Username">[Username]</OutArgument>
+          <OutArgument x:TypeArguments="x:String" x:Key="Password">[Password]</OutArgument>
+        </ui:InvokeWorkflowFile.Arguments>
+      </ui:InvokeWorkflowFile>
+    </Sequence>
+    <Assign sap2010:Annotation.AnnotationText="Please set the Query according to your configuration." DisplayName="Assign TaskListQuery" sap2010:WorkflowViewState.IdRef="Assign_1">
+      <Assign.To>
+        <OutArgument x:TypeArguments="x:String">[TaskListQuery]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="x:String">u_accessLIKEit^ORu_accessLIKEGSD-DXC^active=true^assigned_toDYNAMIC90d1921e5f510100a9ad2572f2b477fe^request_item.cat_item=c00738560f27fa007bd95c3be1050e2d^state=1</InArgument>
+      </Assign.Value>
+    </Assign>
+    <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" sap2010:Annotation.AnnotationText="Get the list of tasks filtered by the query set above.&#xA;&#xA;Output contains 5 fields for each record:&#xA; - sys_id - the ID of the Task&#xA; - request - the ID of the Request&#xA; - request_item - the ID of the Request Item&#xA; - request_item.state&#xA; - request_item.u_number_of_users" DisplayName="Invoke GetRecords workflow" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_1" UnSafe="False" WorkflowFileName="GetRecords.xaml">
+      <ui:InvokeWorkflowFile.Arguments>
+        <InArgument x:TypeArguments="x:String" x:Key="InstanceURL">[ServiceNowUrl]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="Username">[Username]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="Password">[Password]</InArgument>
+        <OutArgument x:TypeArguments="x:Int32" x:Key="StatusCode">[statusCode]</OutArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="Query">[TaskListQuery]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="TableName">sc_task</InArgument>
+        <OutArgument x:TypeArguments="njl:JArray" x:Key="Result">[TasksList]</OutArgument>
+        <InArgument x:TypeArguments="s:String[]" x:Key="OutputFields">[{"sys_id", "request_item", "request", "request_item.state", "request_item.u_number_of_users"}]</InArgument>
+      </ui:InvokeWorkflowFile.Arguments>
+    </ui:InvokeWorkflowFile>
+    <ui:ForEach x:TypeArguments="njl:JObject" DisplayName="For each Task" sap2010:WorkflowViewState.IdRef="ForEach`1_2" Values="[TasksList]">
+      <ui:ForEach.Body>
+        <ActivityAction x:TypeArguments="njl:JObject">
+          <ActivityAction.Argument>
+            <DelegateInArgument x:TypeArguments="njl:JObject" Name="Task" />
+          </ActivityAction.Argument>
+          <Sequence DisplayName="Do" sap2010:WorkflowViewState.IdRef="Sequence_4">
+            <Sequence.Variables>
+              <Variable x:TypeArguments="njl:JToken" Name="RequestItemDetails" />
+              <Variable x:TypeArguments="ui:GenericValue" Name="NumberOfUser" />
+              <Variable x:TypeArguments="ui:GenericValue" Name="Status" />
+              <Variable x:TypeArguments="scg:Dictionary(x:String, x:String)" Name="RequestItemVariables" />
+              <Variable x:TypeArguments="sd:DataTable" Name="UpdatedData" />
+            </Sequence.Variables>
+            <ui:LogMessage DisplayName="Log message - IDs" sap2010:WorkflowViewState.IdRef="LogMessage_1" Level="Info" Message="[String.Format(&quot;Request Item {0} / Task {1} / Request {2}&quot;, Task(&quot;request_item&quot;), Task(&quot;sys_id&quot;), Task(&quot;request&quot;))]" />
+            <Assign DisplayName="Assign Number of user" sap2010:WorkflowViewState.IdRef="Assign_5">
+              <Assign.To>
+                <OutArgument x:TypeArguments="ui:GenericValue">[NumberOfUser]</OutArgument>
+              </Assign.To>
+              <Assign.Value>
+                <InArgument x:TypeArguments="ui:GenericValue">[Task("request_item.u_number_of_users").ToString]</InArgument>
+              </Assign.Value>
+            </Assign>
+            <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" sap2010:Annotation.AnnotationText="Get Request Item details, to get the display name for the State parameter.&#xA;The &quot;GetRecords&quot; retrieves the internal names, while this one returns the Display names." DisplayName="Invoke GetTableItem workflow" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_3" UnSafe="False" WorkflowFileName="GetRecord.xaml">
+              <ui:InvokeWorkflowFile.Arguments>
+                <InArgument x:TypeArguments="x:String" x:Key="InstanceURL">[ServiceNowUrl]</InArgument>
+                <InArgument x:TypeArguments="x:String" x:Key="Username">[Username]</InArgument>
+                <InArgument x:TypeArguments="x:String" x:Key="Password">[Password]</InArgument>
+                <InArgument x:TypeArguments="x:String" x:Key="TableName">sc_req_item</InArgument>
+                <InArgument x:TypeArguments="x:String" x:Key="RecordID">[Task("request_item").ToString]</InArgument>
+                <OutArgument x:TypeArguments="njl:JToken" x:Key="Result">[RequestItemDetails]</OutArgument>
+                <OutArgument x:TypeArguments="x:Int32" x:Key="StatusCode">[statusCode]</OutArgument>
+              </ui:InvokeWorkflowFile.Arguments>
+            </ui:InvokeWorkflowFile>
+            <Assign DisplayName="Assign Status" sap2010:WorkflowViewState.IdRef="Assign_6">
+              <Assign.To>
+                <OutArgument x:TypeArguments="ui:GenericValue">[Status]</OutArgument>
+              </Assign.To>
+              <Assign.Value>
+                <InArgument x:TypeArguments="ui:GenericValue">[RequestItemDetails("state").ToString]</InArgument>
+              </Assign.Value>
+            </Assign>
+            <ui:LogMessage DisplayName="Log message Number of user" sap2010:WorkflowViewState.IdRef="LogMessage_2" Level="Info" Message="[String.Format(&quot;Number of User: {0} | Status: {1}&quot;, NumberOfUser, Status)]" />
+            <If Condition="[NumberOfUser &lt;= 5]" DisplayName="If NumberOfUser" sap2010:WorkflowViewState.IdRef="If_1">
+              <If.Then>
+                <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke GetRequestItemVariableDetails workflow" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_5" UnSafe="False" WorkflowFileName="UseCases\GetRequestItemVariableDetails.xaml">
+                  <ui:InvokeWorkflowFile.Arguments>
+                    <InArgument x:TypeArguments="ui:GenericValue" x:Key="NumberOfUser">[NumberOfUser]</InArgument>
+                    <InArgument x:TypeArguments="x:String" x:Key="Password">[Password]</InArgument>
+                    <InArgument x:TypeArguments="x:String" x:Key="Username">[Username]</InArgument>
+                    <InArgument x:TypeArguments="x:String" x:Key="ServiceNowUrl">[ServiceNowUrl]</InArgument>
+                    <InArgument x:TypeArguments="x:String" x:Key="RequestItemID">[Task("request_item").ToString]</InArgument>
+                  </ui:InvokeWorkflowFile.Arguments>
+                </ui:InvokeWorkflowFile>
+              </If.Then>
+              <If.Else>
+                <Sequence DisplayName="Download all attachments" sap2010:WorkflowViewState.IdRef="Sequence_5">
+                  <Sequence.Variables>
+                    <Variable x:TypeArguments="sd:DataTable" Name="Attachments" />
+                  </Sequence.Variables>
+                  <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke GetAttachmentsList workflow" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_6" UnSafe="False" WorkflowFileName="GetAttachmentsList.xaml">
+                    <ui:InvokeWorkflowFile.Arguments>
+                      <InArgument x:TypeArguments="x:String" x:Key="TableName">sc_req_item</InArgument>
+                      <InArgument x:TypeArguments="x:String" x:Key="RecordId">[Task("request_item").ToString]</InArgument>
+                      <InArgument x:TypeArguments="x:Int32" x:Key="Limit">10</InArgument>
+                      <InArgument x:TypeArguments="x:String" x:Key="InstanceURL">[ServiceNowUrl]</InArgument>
+                      <InArgument x:TypeArguments="x:String" x:Key="Username">[Username]</InArgument>
+                      <InArgument x:TypeArguments="x:String" x:Key="Password">[Password]</InArgument>
+                      <OutArgument x:TypeArguments="x:Int32" x:Key="StatusCode" />
+                      <OutArgument x:TypeArguments="sd:DataTable" x:Key="Result">[Attachments]</OutArgument>
+                    </ui:InvokeWorkflowFile.Arguments>
+                  </ui:InvokeWorkflowFile>
+                  <ui:ForEachRow DataTable="[Attachments]" DisplayName="For each row" sap2010:WorkflowViewState.IdRef="ForEachRow_1">
+                    <ui:ForEachRow.Body>
+                      <ActivityAction x:TypeArguments="sd:DataRow">
+                        <ActivityAction.Argument>
+                          <DelegateInArgument x:TypeArguments="sd:DataRow" Name="row" />
+                        </ActivityAction.Argument>
+                        <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke DownloadAttachment workflow" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_7" UnSafe="False" WorkflowFileName="DownloadAttachment.xaml">
+                          <ui:InvokeWorkflowFile.Arguments>
+                            <InArgument x:TypeArguments="x:String" x:Key="InstanceURL">[ServiceNowUrl]</InArgument>
+                            <InArgument x:TypeArguments="x:String" x:Key="Username">[Username]</InArgument>
+                            <InArgument x:TypeArguments="x:String" x:Key="Password">[Password]</InArgument>
+                            <InArgument x:TypeArguments="x:String" x:Key="AttachementID">[row("sys_id").ToString]</InArgument>
+                            <OutArgument x:TypeArguments="x:Int32" x:Key="StatusCode" />
+                            <InArgument x:TypeArguments="x:String" x:Key="FilePath">["Output\" + row("file_name").ToString]</InArgument>
+                          </ui:InvokeWorkflowFile.Arguments>
+                        </ui:InvokeWorkflowFile>
+                      </ActivityAction>
+                    </ui:ForEachRow.Body>
+                  </ui:ForEachRow>
+                </Sequence>
+              </If.Else>
+            </If>
+            <ui:BuildDataTable sap2010:Annotation.AnnotationText="Set the Status to Work In Progress (state = 2) and add a comment." DataTable="[UpdatedData]" DisplayName="Build data table - updated data" sap2010:WorkflowViewState.IdRef="BuildDataTable_1" TableInfo="&lt;NewDataSet&gt;&#xA;  &lt;xs:schema id=&quot;NewDataSet&quot; xmlns=&quot;&quot; xmlns:xs=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:msdata=&quot;urn:schemas-microsoft-com:xml-msdata&quot;&gt;&#xA;    &lt;xs:element name=&quot;NewDataSet&quot; msdata:IsDataSet=&quot;true&quot; msdata:MainDataTable=&quot;TableName&quot; msdata:UseCurrentLocale=&quot;true&quot;&gt;&#xA;      &lt;xs:complexType&gt;&#xA;        &lt;xs:choice minOccurs=&quot;0&quot; maxOccurs=&quot;unbounded&quot;&gt;&#xA;          &lt;xs:element name=&quot;TableName&quot;&gt;&#xA;            &lt;xs:complexType&gt;&#xA;              &lt;xs:sequence&gt;&#xA;                &lt;xs:element name=&quot;key&quot; type=&quot;xs:string&quot; minOccurs=&quot;0&quot; /&gt;&#xA;                &lt;xs:element name=&quot;Value&quot; type=&quot;xs:string&quot; minOccurs=&quot;0&quot; /&gt;&#xA;              &lt;/xs:sequence&gt;&#xA;            &lt;/xs:complexType&gt;&#xA;          &lt;/xs:element&gt;&#xA;        &lt;/xs:choice&gt;&#xA;      &lt;/xs:complexType&gt;&#xA;    &lt;/xs:element&gt;&#xA;  &lt;/xs:schema&gt;&#xA;  &lt;TableName&gt;&#xA;    &lt;key&gt;state&lt;/key&gt;&#xA;    &lt;Value&gt;2&lt;/Value&gt;&#xA;  &lt;/TableName&gt;&#xA;  &lt;TableName&gt;&#xA;    &lt;key&gt;comments&lt;/key&gt;&#xA;    &lt;Value&gt;This is added by the robot&lt;/Value&gt;&#xA;  &lt;/TableName&gt;&#xA;&lt;/NewDataSet&gt;" />
+            <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke UpdateRecord workflow" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_8" UnSafe="False" WorkflowFileName="UpdateRecord.xaml">
+              <ui:InvokeWorkflowFile.Arguments>
+                <InArgument x:TypeArguments="x:String" x:Key="InstanceURL">[ServiceNowUrl]</InArgument>
+                <InArgument x:TypeArguments="x:String" x:Key="Username">[Username]</InArgument>
+                <InArgument x:TypeArguments="x:String" x:Key="Password">[Password]</InArgument>
+                <InArgument x:TypeArguments="x:String" x:Key="TableName">sc_task</InArgument>
+                <InArgument x:TypeArguments="x:String" x:Key="RecordID">[Task("sys_id").ToString]</InArgument>
+                <InArgument x:TypeArguments="sd:DataTable" x:Key="UpdateData">[UpdatedData]</InArgument>
+                <OutArgument x:TypeArguments="x:Int32" x:Key="StatusCode">[statusCode]</OutArgument>
+              </ui:InvokeWorkflowFile.Arguments>
+            </ui:InvokeWorkflowFile>
+          </Sequence>
+        </ActivityAction>
+      </ui:ForEach.Body>
+    </ui:ForEach>
+    <sads:DebugSymbol.Symbol>d1ZDOlxVc2Vyc1xXaW4xMFVzZXJcRGVza3RvcFxTZXJ2aWNlTm93QVBJU25pcHBldHMtbWFzdGVyXFVzZUNhc2VzXFVzZUNhc2UyX1Byb2Nlc3MueGFtbFFKA98BDgIBAVMFWxACAWlcBWMOAgFlZAVvHQIBVXAF3QESAgECVAdaHwIBamEwYdIBAgFoXjFeQAIBZmZEZlMCAWNtR22mAQIBYmdBZ0sCAWBsQmxNAgFeaj5qTQIBXGtCa0kCAVtoQWhLAgFZaUNpTwIBV2SABGSRBAIBVnCAAXCNAQIBVHYL2gEWAgEDVklWWAIBcFdEV04CAW5YRFhOAgFsVL4BVNkBAgFrfg1+oAICAVJ/DYYBFgIBTocBDZEBJQIBQ5IBDZkBFgIBP5oBDZoB4gECAT2bAQ3NARICARXOAQ3OAf0MAgESzwEN2QElAgEEfoABfp0CAgFThAE/hAFwAgFRgQFAgQFOAgFPjQFJjQFoAgFNiQFMiQF0AgFMigFJigFXAgFLjgFKjgFeAgFJjAFKjAFVAgFIiwFJiwFbAgFHjwFLjwFXAgFFhwGXA4cBpwMCAUSXAT+XAWUCAUKUAUCUAUgCAUCaAYkBmgHfAQIBPpsBG5sBMwIBFp0BEaUBKQIBMqgBEcsBHAIBF84BkAHOAZ8BAgET1QFJ1QFiAgER0QFM0QFbAgEP1gFP1gFcAgEN0gFJ0gFTAgEL1AFK1AFRAgEK0wFJ0wFTAgEI1wFL1wFXAgEGzwHBAc8B1AECAQWiAVKiAWECATujAVKjAXECATqhAU2hAVcCATigAU2gAVcCATafAVifAWYCATSdAdYBnQGDAgIBM6wBE7cBKwIBJbgBE8oBIwIBGLEBUrEBYQIBMK8BT68BbgIBL7IBT7IBWQIBLbUBUrUBXwIBK7ABS7ABTQIBKq4BUK4BWwIBKbMBT7MBWQIBJ6wBzQGsAeYBAgEmuAEsuAE7AgEjvgEZxwExAgEZwAFYwAFnAgEhwwFawwFyAgEgwQFVwQFfAgEewgFVwgFfAgEcvgHTAb4B7AECARvFAVXFAXwCARo=</sads:DebugSymbol.Symbol>
+  </Sequence>
+  <sap2010:WorkflowViewState.ViewStateManager>
+    <sap2010:ViewStateManager>
+      <sap2010:ViewStateData Id="InvokeWorkflowFile_9" sap:VirtualizedContainerService.HintSize="314,87" />
+      <sap2010:ViewStateData Id="Sequence_6" sap:VirtualizedContainerService.HintSize="743,211">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Assign_1" sap:VirtualizedContainerService.HintSize="743,102">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="InvokeWorkflowFile_1" sap:VirtualizedContainerService.HintSize="743,219">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="LogMessage_1" sap:VirtualizedContainerService.HintSize="705,91" />
+      <sap2010:ViewStateData Id="Assign_5" sap:VirtualizedContainerService.HintSize="705,60" />
+      <sap2010:ViewStateData Id="InvokeWorkflowFile_3" sap:VirtualizedContainerService.HintSize="705,159">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Assign_6" sap:VirtualizedContainerService.HintSize="705,60" />
+      <sap2010:ViewStateData Id="LogMessage_2" sap:VirtualizedContainerService.HintSize="705,91" />
+      <sap2010:ViewStateData Id="InvokeWorkflowFile_5" sap:VirtualizedContainerService.HintSize="314,87" />
+      <sap2010:ViewStateData Id="InvokeWorkflowFile_6" sap:VirtualizedContainerService.HintSize="344,87" />
+      <sap2010:ViewStateData Id="InvokeWorkflowFile_7" sap:VirtualizedContainerService.HintSize="314,87" />
+      <sap2010:ViewStateData Id="ForEachRow_1" sap:VirtualizedContainerService.HintSize="344,235" />
+      <sap2010:ViewStateData Id="Sequence_5" sap:VirtualizedContainerService.HintSize="366,486">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="If_1" sap:VirtualizedContainerService.HintSize="705,634" />
+      <sap2010:ViewStateData Id="BuildDataTable_1" sap:VirtualizedContainerService.HintSize="705,101">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="InvokeWorkflowFile_8" sap:VirtualizedContainerService.HintSize="705,87" />
+      <sap2010:ViewStateData Id="Sequence_4" sap:VirtualizedContainerService.HintSize="727,1687">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="ForEach`1_2" sap:VirtualizedContainerService.HintSize="743,1821" />
+      <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="765,2819">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="UseCase2_Process_1" sap:VirtualizedContainerService.HintSize="805,2899" />
+    </sap2010:ViewStateManager>
+  </sap2010:WorkflowViewState.ViewStateManager>
+</Activity>
