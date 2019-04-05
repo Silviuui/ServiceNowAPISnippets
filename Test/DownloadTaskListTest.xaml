@@ -64,31 +64,31 @@
       <Variable x:TypeArguments="x:String" Name="Password" />
     </Sequence.Variables>
     <Sequence DisplayName="Get ServiceNow config values" sap2010:WorkflowViewState.IdRef="Sequence_2">
-      <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke GetConfigValues workflow" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_2" UnSafe="False" WorkflowFileName="Test\_GetConfigValues.xaml">
+      <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke GetConfigValues workflow" UnSafe="False" WorkflowFileName="Test\_GetConfigValues.xaml">
         <ui:InvokeWorkflowFile.Arguments>
-          <OutArgument x:TypeArguments="x:String" x:Key="ServiceNowUrl">[ServiceNowUrl]</OutArgument>
-          <OutArgument x:TypeArguments="x:String" x:Key="Username">[Username]</OutArgument>
-          <OutArgument x:TypeArguments="x:String" x:Key="Password">[Password]</OutArgument>
+          <OutArgument x:TypeArguments="x:String" x:Key="out_ServiceNowUrl">[ServiceNowUrl]</OutArgument>
+          <OutArgument x:TypeArguments="x:String" x:Key="out_Username">[Username]</OutArgument>
+          <OutArgument x:TypeArguments="x:String" x:Key="out_Password">[Password]</OutArgument>
         </ui:InvokeWorkflowFile.Arguments>
+        <sap2010:WorkflowViewState.IdRef>InvokeWorkflowFile_3</sap2010:WorkflowViewState.IdRef>
       </ui:InvokeWorkflowFile>
     </Sequence>
     <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke DownloadTaskList workflow" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_1" UnSafe="False" WorkflowFileName="DownloadTaskList.xaml">
       <ui:InvokeWorkflowFile.Arguments>
-        <InArgument x:TypeArguments="x:String" x:Key="InstanceURL">[ServiceNowUrl]</InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="Username">[Username]</InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="Password">[Password]</InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="OutputFileFormat">PDF</InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="OutputFilePath">Tasks.pdf</InArgument>
-        <OutArgument x:TypeArguments="x:Int32" x:Key="StatusCode">[statusCode]</OutArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="Query">u_accessLIKEit^ORu_accessLIKEGSD-DXC^assignment_groupDYNAMICd6435e965f510100a9ad2572f2b47744^request_item.cat_item=b141109e0fa3fa007bd95c3be1050e39^state=1</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_InstanceURL">[ServiceNowUrl]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Username">[Username]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Password">[Password]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_OutputFileFormat">PDF</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_OutputFilePath">Tasks.pdf</InArgument>
+        <OutArgument x:TypeArguments="x:Int32" x:Key="out_StatusCode">[statusCode]</OutArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Query">u_accessLIKEit^ORu_accessLIKEGSD-DXC^assignment_groupDYNAMICd6435e965f510100a9ad2572f2b47744^request_item.cat_item=b141109e0fa3fa007bd95c3be1050e39^state=1</InArgument>
       </ui:InvokeWorkflowFile.Arguments>
     </ui:InvokeWorkflowFile>
-    <WriteLine DisplayName="Write line GetRecord status code" sap2010:WorkflowViewState.IdRef="WriteLine_2" Text="[&quot;Status Code: &quot; + StatusCode.ToString]" />
-    <sads:DebugSymbol.Symbol>d0xDOlxVc2Vyc1xTaWx2aXVcRGVza3RvcFxTZXJ2aWNlTm93SW50ZWdyYXRpb25cVGVzdFxEb3dubG9hZFRhc2tMaXN0VGVzdC54YW1sEjsDWA4CAQFCBUoQAgESSwVVHQIBBVYFVqgBAgECQwdJHwIBE01ETVMCARBQSVBMAgEPTkFOSwIBDVFHUVACAQxTPlPZAQIBC09BT0sCAQlSQ1JPAgEHS70BS9QBAgEGVnJWpQECAQNFSUVYAgEZRkRGTgIBF0dER04CARVDvgFD2gECARQ=</sads:DebugSymbol.Symbol>
+    <sads:DebugSymbol.Symbol>d1REOlxSUEEgUHJvamVjdHNcX015R29Db21wb25lbnRzXFNlcnZpY2VOb3dBUElTbmlwcGV0c1xUZXN0XERvd25sb2FkVGFza0xpc3RUZXN0LnhhbWwQOwNYDgIBAUIFSxACAQ9MBVYdAgECQwdKHwIBEE5HTlYCAQ1SSlJTAgEMUUxRTwIBC09ET04CAQlUQVTcAQIBCFNHU1MCAQZMvQFM1AECAQVQRFBOAgEDR0hHUgIBFkZIRlICARRFTUVcAgESQ4cBQ6MBAgER</sads:DebugSymbol.Symbol>
   </Sequence>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>
-      <sap2010:ViewStateData Id="InvokeWorkflowFile_2" sap:VirtualizedContainerService.HintSize="314,87" />
+      <sap2010:ViewStateData Id="InvokeWorkflowFile_3" sap:VirtualizedContainerService.HintSize="314,87" />
       <sap2010:ViewStateData Id="Sequence_2" sap:VirtualizedContainerService.HintSize="336,211">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
@@ -97,8 +97,7 @@
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
       <sap2010:ViewStateData Id="InvokeWorkflowFile_1" sap:VirtualizedContainerService.HintSize="336,87" />
-      <sap2010:ViewStateData Id="WriteLine_2" sap:VirtualizedContainerService.HintSize="336,61" />
-      <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="358,635">
+      <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="358,534">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -106,7 +105,7 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="TestDownloadTaskList_1" sap:VirtualizedContainerService.HintSize="398,715" />
+      <sap2010:ViewStateData Id="TestDownloadTaskList_1" sap:VirtualizedContainerService.HintSize="398,614" />
     </sap2010:ViewStateManager>
   </sap2010:WorkflowViewState.ViewStateManager>
 </Activity>

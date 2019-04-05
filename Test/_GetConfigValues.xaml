@@ -11,9 +11,9 @@
  xmlns:ui="http://schemas.uipath.com/workflow/activities"
  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <x:Members>
-    <x:Property Name="ServiceNowUrl" Type="OutArgument(x:String)" />
-    <x:Property Name="Username" Type="OutArgument(x:String)" />
-    <x:Property Name="Password" Type="OutArgument(x:String)" />
+    <x:Property Name="out_ServiceNowUrl" Type="OutArgument(x:String)" />
+    <x:Property Name="out_Username" Type="OutArgument(x:String)" />
+    <x:Property Name="out_Password" Type="OutArgument(x:String)" />
   </x:Members>
   <mva:VisualBasic.Settings>
     <x:Null />
@@ -77,7 +77,7 @@
     <ui:ReadRange AddHeaders="False" sap2010:Annotation.AnnotationText="We read only one column, 3 cells for:&#xA; - ServiceNowUrl&#xA; - Username&#xA; - Password" DataTable="[ConfigData]" DisplayName="Read Range - Config values" sap2010:WorkflowViewState.IdRef="ReadRange_1" Range="B1:B3" SheetName="Config" WorkbookPath="Test\Config.xlsx" />
     <Assign sap2010:Annotation.AnnotationText="ServiceNowUrl is in cell B1" DisplayName="Assign ServiceNowUrl" sap2010:WorkflowViewState.IdRef="Assign_1">
       <Assign.To>
-        <OutArgument x:TypeArguments="x:String">[ServiceNowUrl]</OutArgument>
+        <OutArgument x:TypeArguments="x:String">[out_ServiceNowUrl]</OutArgument>
       </Assign.To>
       <Assign.Value>
         <InArgument x:TypeArguments="x:String">[ConfigData.Rows(0)(0).ToString]</InArgument>
@@ -85,7 +85,7 @@
     </Assign>
     <Assign sap2010:Annotation.AnnotationText="Username for ServiceNow is in cell B2" DisplayName="Assign Username" sap2010:WorkflowViewState.IdRef="Assign_2">
       <Assign.To>
-        <OutArgument x:TypeArguments="x:String">[Username]</OutArgument>
+        <OutArgument x:TypeArguments="x:String">[out_Username]</OutArgument>
       </Assign.To>
       <Assign.Value>
         <InArgument x:TypeArguments="x:String">[ConfigData.Rows(1)(0).ToString]</InArgument>
@@ -93,13 +93,13 @@
     </Assign>
     <Assign sap2010:Annotation.AnnotationText="Password for ServiceNow is in cell B3" DisplayName="Assign Password" sap2010:WorkflowViewState.IdRef="Assign_3">
       <Assign.To>
-        <OutArgument x:TypeArguments="x:String">[Password]</OutArgument>
+        <OutArgument x:TypeArguments="x:String">[out_Password]</OutArgument>
       </Assign.To>
       <Assign.Value>
         <InArgument x:TypeArguments="x:String">[ConfigData.Rows(2)(0).ToString]</InArgument>
       </Assign.Value>
     </Assign>
-    <sads:DebugSymbol.Symbol>d1BEOlxSUEEgUHJvamVjdHNcX015R29Db21wb25lbnRzXFNlcnZpY2VOb3dBUElTbmlwcGV0c1xUZXN0XF9HZXRDb25maWdWYWx1ZXMueGFtbA9JA2cOAgEBTQVN2AICAQ5OBVUOAgEKVgVdDgIBBl4FZQ4CAQJNrwFNvQECARJNmwJNogICARFNrQJNtQICARBNwwJN1QICAQ9TMFNQAgENUDFQQAIBC1swW1ACAQlYMVg7AgEHYzBjUAIBBWAxYDsCAQM=</sads:DebugSymbol.Symbol>
+    <sads:DebugSymbol.Symbol>d1BEOlxSUEEgUHJvamVjdHNcX015R29Db21wb25lbnRzXFNlcnZpY2VOb3dBUElTbmlwcGV0c1xUZXN0XF9HZXRDb25maWdWYWx1ZXMueGFtbA9JA2cOAgEBTQVN2AICAQ5OBVUOAgEKVgVdDgIBBl4FZQ4CAQJNrwFNvQECARJNmwJNogICARFNrQJNtQICARBNwwJN1QICAQ9TMFNQAgENUDFQRAIBC1swW1ACAQlYMVg/AgEHYzBjUAIBBWAxYD8CAQM=</sads:DebugSymbol.Symbol>
   </Sequence>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>

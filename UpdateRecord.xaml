@@ -1,4 +1,4 @@
-﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="UpdateRecord" this:UpdateRecord.TimeoutMS="20000"
+﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="UpdateRecord" this:UpdateRecord.in_TimeoutMS="20000"
  xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
  xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities"
@@ -13,14 +13,14 @@
  xmlns:ui="http://schemas.uipath.com/workflow/activities"
  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <x:Members>
-    <x:Property sap2010:Annotation.AnnotationText="ServiceNow instance URL, for example &quot;https://dev123.servicenow.com&quot;." Name="InstanceURL" Type="InArgument(x:String)" />
-    <x:Property sap2010:Annotation.AnnotationText="Username for ServiceNow basic authentication." Name="Username" Type="InArgument(x:String)" />
-    <x:Property sap2010:Annotation.AnnotationText="Password for ServiceNow basic authentication." Name="Password" Type="InArgument(x:String)" />
-    <x:Property sap2010:Annotation.AnnotationText="Name of the table in which the record is located." Name="TableName" Type="InArgument(x:String)" />
-    <x:Property sap2010:Annotation.AnnotationText="Unique identifier of the record to update." Name="RecordID" Type="InArgument(x:String)" />
-    <x:Property sap2010:Annotation.AnnotationText="DataTable object with the fields and new values to update. At least two columns are required, first column is used for field name and the second column is used for new value." Name="UpdateData" Type="InArgument(sd:DataTable)" />
-    <x:Property Name="StatusCode" Type="OutArgument(x:Int32)" />
-    <x:Property sap2010:Annotation.AnnotationText="The maximum time, in milliseconds, to wait for the HTTP request to complete." Name="TimeoutMS" Type="InArgument(x:Int32)" />
+    <x:Property sap2010:Annotation.AnnotationText="Username for ServiceNow basic authentication." Name="in_Username" Type="InArgument(x:String)" />
+    <x:Property sap2010:Annotation.AnnotationText="DataTable object with the fields and new values to update. At least two columns are required, first column is used for field name and the second column is used for new value." Name="in_UpdateData" Type="InArgument(sd:DataTable)" />
+    <x:Property sap2010:Annotation.AnnotationText="The maximum time, in milliseconds, to wait for the HTTP request to complete." Name="in_TimeoutMS" Type="InArgument(x:Int32)" />
+    <x:Property sap2010:Annotation.AnnotationText="Name of the table in which the record is located." Name="in_TableName" Type="InArgument(x:String)" />
+    <x:Property Name="out_StatusCode" Type="OutArgument(x:Int32)" />
+    <x:Property sap2010:Annotation.AnnotationText="Unique identifier of the record to update." Name="in_RecordID" Type="InArgument(x:String)" />
+    <x:Property sap2010:Annotation.AnnotationText="Password for ServiceNow basic authentication." Name="in_Password" Type="InArgument(x:String)" />
+    <x:Property sap2010:Annotation.AnnotationText="ServiceNow instance URL, for example &quot;https://dev123.servicenow.com&quot;." Name="in_InstanceURL" Type="InArgument(x:String)" />
   </x:Members>
   <mva:VisualBasic.Settings>
     <x:Null />
@@ -79,9 +79,10 @@
       <AssemblyReference>System.ComponentModel.Composition</AssemblyReference>
       <AssemblyReference>Newtonsoft.Json</AssemblyReference>
       <AssemblyReference>UiPath.Cryptography</AssemblyReference>
+      <AssemblyReference>System.Runtime.WindowsRuntime</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence sap2010:Annotation.AnnotationText="This workflow updates the specified record with the new data contained in the input DataTable object. At least two columns are required, first column is used for field name and the second column is used for new value.&#xA;&#xA;The response body is suppressed using the &quot;X-no-response-body&quot; header, as it is not required.&#xD;&#xA;&#xD;&#xA;A value of 2xx (200, 201, 202, etc.) for StatusCode means Success. " DisplayName="Update Record" sap2010:WorkflowViewState.IdRef="Sequence_1">
+  <Sequence sap2010:Annotation.AnnotationText="This workflow updates the specified record with the new data contained in the input DataTable object. At least two columns are required, first column is used for field name and the second column is used for new value.&#xA;&#xA;The response body is suppressed using the &quot;X-no-response-body&quot; header, as it is not required.&#xA;&#xA;A value of 2xx (200, 201, 202, etc.) for StatusCode means Success. " DisplayName="Update Record" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <Sequence.Variables>
       <Variable x:TypeArguments="x:String" Default="api/now/table" Modifiers="ReadOnly" Name="UpdateRecordAPIEndpoint" />
       <Variable x:TypeArguments="x:String" Name="RequestURL" />
@@ -92,7 +93,7 @@
         <OutArgument x:TypeArguments="x:String">[RequestURL]</OutArgument>
       </Assign.To>
       <Assign.Value>
-        <InArgument x:TypeArguments="x:String">[String.Format("{0}/{1}/{2}/{3}", InstanceURL, UpdateRecordAPIEndpoint, TableName, RecordID)]</InArgument>
+        <InArgument x:TypeArguments="x:String">[String.Format("{0}/{1}/{2}/{3}", in_InstanceURL, UpdateRecordAPIEndpoint, in_TableName, in_RecordID)]</InArgument>
       </Assign.Value>
     </Assign>
     <WriteLine DisplayName="Write line Request URL" sap2010:WorkflowViewState.IdRef="WriteLine_1" Text="[&quot;Request URL: &quot; + RequestURL]" />
@@ -108,7 +109,7 @@
           <InArgument x:TypeArguments="njl:JObject">[new JObject()]</InArgument>
         </Assign.Value>
       </Assign>
-      <ui:ForEachRow DataTable="[UpdateData]" DisplayName="For Each Row in UpdateData" sap2010:WorkflowViewState.IdRef="ForEachRow_1">
+      <ui:ForEachRow DataTable="[in_UpdateData]" DisplayName="For Each Row in UpdateData" sap2010:WorkflowViewState.IdRef="ForEachRow_1">
         <ui:ForEachRow.Body>
           <ActivityAction x:TypeArguments="sd:DataRow">
             <ActivityAction.Argument>
@@ -133,7 +134,7 @@
         </Assign.Value>
       </Assign>
     </Sequence>
-    <ui:HttpClient ConsumerKey="{x:Null}" ConsumerSecret="{x:Null}" ContinueOnError="{x:Null}" OAuth1Token="{x:Null}" OAuth1TokenSecret="{x:Null}" OAuth2Token="{x:Null}" ResourcePath="{x:Null}" ResponseHeaders="{x:Null}" Result="{x:Null}" AcceptFormat="JSON" Body="[RequestBody]" BodyFormat="application/json" ClientCertificate="[Nothing]" ClientCertificatePassword="[Nothing]" DisplayName="HTTP PATCH Request" EndPoint="[RequestURL]" sap2010:WorkflowViewState.IdRef="HttpClient_1" Method="PATCH" Password="[Password]" StatusCode="[StatusCode]" TimeoutMS="[TimeoutMS]" Username="[Username]">
+    <ui:HttpClient ConsumerKey="{x:Null}" ConsumerSecret="{x:Null}" ContinueOnError="{x:Null}" OAuth1Token="{x:Null}" OAuth1TokenSecret="{x:Null}" OAuth2Token="{x:Null}" ResourcePath="{x:Null}" ResponseHeaders="{x:Null}" Result="{x:Null}" AcceptFormat="JSON" Body="[RequestBody]" BodyFormat="application/json" ClientCertificate="[Nothing]" ClientCertificatePassword="[Nothing]" DisplayName="HTTP PATCH Request" EndPoint="[RequestURL]" sap2010:WorkflowViewState.IdRef="HttpClient_1" Method="PATCH" Password="[in_Password]" StatusCode="[out_StatusCode]" TimeoutMS="[in_TimeoutMS]" Username="[in_Username]">
       <ui:HttpClient.Attachments>
         <scg:Dictionary x:TypeArguments="x:String, InArgument(x:String)" />
       </ui:HttpClient.Attachments>
@@ -147,8 +148,8 @@
         <scg:Dictionary x:TypeArguments="x:String, InArgument(x:String)" />
       </ui:HttpClient.UrlSegments>
     </ui:HttpClient>
-    <WriteLine DisplayName="Write line Status Code" sap2010:WorkflowViewState.IdRef="WriteLine_2" Text="[&quot;Status code: &quot; + StatusCode.ToString]" />
-    <sads:DebugSymbol.Symbol>dz9DOlxVc2Vyc1xTaWx2aXVcRGVza3RvcFxTZXJ2aWNlTm93SW50ZWdyYXRpb25cVXBkYXRlUmVjb3JkLnhhbWwhAV4BZAECVAOYAQ4CAQFWNFZDAgECWgVhDgIBKmIFYpUBAgEnYwWHARACARaIAQWVARUCAQaWAQWWAZ4BAgEDXzBfjQECAS1cMVw9AgErYmhikgECAShnB24QAgEjbwd+FwIBG38HhgEQAgEXjQFLjQFPAgEViAHvAogB+gICARSIAawEiAG5BAIBEogBiQKIAZgCAgEQiAHDBIgBzwQCAQ6IAaUDiAGzAwIBDIgB+wOIAYcEAgEKiAHJAogB1AICAQmIAZMEiAGhBAIBB5YBaJYBmwECAQRsNWxEAgEmaTZpQgIBJG84b0YCASF1DXscAgEchAEyhAFHAgEagQEzgQFAAgEYejh6SQIBIHc7d0cCAR55NnlHAgEd</sads:DebugSymbol.Symbol>
+    <WriteLine DisplayName="Write line Status Code" sap2010:WorkflowViewState.IdRef="WriteLine_2" Text="[&quot;Status code: &quot; + out_StatusCode.ToString]" />
+    <sads:DebugSymbol.Symbol>d0dEOlxSUEEgUHJvamVjdHNcX015R29Db21wb25lbnRzXFNlcnZpY2VOb3dBUElTbmlwcGV0c1xVcGRhdGVSZWNvcmQueGFtbCEBYQFnAQJVA5kBDgIBAVc0V0MCAQJbBWIOAgEqYwVjlQECASdkBYgBEAIBFokBBZYBFQIBBpcBBZcBogECAQNgMGCWAQIBLV0xXT0CAStjaGOSAQIBKGgHbxACASNwB38XAgEbgAEHhwEQAgEXjgFLjgFPAgEViQHvAokB+gICARSJAbMEiQHDBAIBEokBiQKJAZgCAgEQiQHNBIkB3AQCAQ6JAaUDiQGzAwIBDIkB+wOJAYoEAgEKiQHJAokB1AICAQmJAZYEiQGoBAIBB5cBaJcBnwECAQRtNW1EAgEmajZqQgIBJHA4cEkCASF2DXwcAgEchQEyhQFHAgEaggEzggFAAgEYezh7SQIBIHg7eEcCAR56NnpHAgEd</sads:DebugSymbol.Symbol>
   </Sequence>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>

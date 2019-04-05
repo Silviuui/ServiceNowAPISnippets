@@ -1,4 +1,4 @@
-﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="DownloadAttachment" this:DownloadAttachment.TimeoutMS="20000"
+﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="DownloadAttachment" this:DownloadAttachment.in_TimeoutMS="20000"
  xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
  xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities"
@@ -11,13 +11,13 @@
  xmlns:ui="http://schemas.uipath.com/workflow/activities"
  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <x:Members>
-    <x:Property sap2010:Annotation.AnnotationText="ServiceNow instance URL, for example &quot;https://dev123.servicenow.com&quot;." Name="InstanceURL" Type="InArgument(x:String)" />
-    <x:Property sap2010:Annotation.AnnotationText="Username for ServiceNow basic authentication." Name="Username" Type="InArgument(x:String)" />
-    <x:Property sap2010:Annotation.AnnotationText="Password for ServiceNow basic authentication." Name="Password" Type="InArgument(x:String)" />
-    <x:Property sap2010:Annotation.AnnotationText="The identifier (sys_id) of the attachment record you want to get binary data from." Name="AttachementID" Type="InArgument(x:String)" />
-    <x:Property Name="StatusCode" Type="OutArgument(x:Int32)" />
-    <x:Property sap2010:Annotation.AnnotationText="Filename and path where to download the attachement." Name="FilePath" Type="InArgument(x:String)" />
-    <x:Property sap2010:Annotation.AnnotationText="The maximum time, in milliseconds, to wait for the HTTP request to complete." Name="TimeoutMS" Type="InArgument(x:Int32)" />
+    <x:Property sap2010:Annotation.AnnotationText="ServiceNow instance URL, for example &quot;https://dev123.servicenow.com&quot;." Name="in_InstanceURL" Type="InArgument(x:String)" />
+    <x:Property sap2010:Annotation.AnnotationText="Username for ServiceNow basic authentication." Name="in_Username" Type="InArgument(x:String)" />
+    <x:Property sap2010:Annotation.AnnotationText="Password for ServiceNow basic authentication." Name="in_Password" Type="InArgument(x:String)" />
+    <x:Property sap2010:Annotation.AnnotationText="The identifier (sys_id) of the attachment record you want to get binary data from." Name="in_AttachementID" Type="InArgument(x:String)" />
+    <x:Property Name="out_StatusCode" Type="OutArgument(x:Int32)" />
+    <x:Property sap2010:Annotation.AnnotationText="Filename and path where to download the attachement." Name="in_FilePath" Type="InArgument(x:String)" />
+    <x:Property sap2010:Annotation.AnnotationText="The maximum time, in milliseconds, to wait for the HTTP request to complete." Name="in_TimeoutMS" Type="InArgument(x:Int32)" />
   </x:Members>
   <mva:VisualBasic.Settings>
     <x:Null />
@@ -74,7 +74,7 @@
       <AssemblyReference>UiPath.Cryptography</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence sap2010:Annotation.AnnotationText="This workflow gets the binary file attachment with the given Attachement ID value and saves it in the specified File Path.&#xD;&#xA;&#xD;&#xA;A value of 2xx (200, 201, 202, etc.) for StatusCode means Success. " DisplayName="Download Attachment" sap2010:WorkflowViewState.IdRef="Sequence_1">
+  <Sequence sap2010:Annotation.AnnotationText="This workflow gets the binary file attachment with the given Attachement ID value and saves it in the specified File Path.&#xA;&#xA;A value of 2xx (200, 201, 202, etc.) for StatusCode means Success. " DisplayName="Download Attachment" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <Sequence.Variables>
       <Variable x:TypeArguments="x:String" Default="api/now/attachment" Modifiers="ReadOnly" Name="AttachmentAPIEndpoint" />
       <Variable x:TypeArguments="x:String" Name="RequestURL" />
@@ -84,11 +84,11 @@
         <OutArgument x:TypeArguments="x:String">[RequestURL]</OutArgument>
       </Assign.To>
       <Assign.Value>
-        <InArgument x:TypeArguments="x:String">[String.Format("{0}/{1}/{2}/file", InstanceURL, AttachmentAPIEndpoint, AttachementID)]</InArgument>
+        <InArgument x:TypeArguments="x:String">[String.Format("{0}/{1}/{2}/file", in_InstanceURL, AttachmentAPIEndpoint, in_AttachementID)]</InArgument>
       </Assign.Value>
     </Assign>
     <WriteLine DisplayName="Write line Request URL" sap2010:WorkflowViewState.IdRef="WriteLine_1" Text="[&quot;Request URL: &quot; + RequestURL]" />
-    <ui:HttpClient Body="{x:Null}" ConsumerKey="{x:Null}" ConsumerSecret="{x:Null}" ContinueOnError="{x:Null}" OAuth1Token="{x:Null}" OAuth1TokenSecret="{x:Null}" OAuth2Token="{x:Null}" ResponseHeaders="{x:Null}" Result="{x:Null}" AcceptFormat="ANY" BodyFormat="application/json" ClientCertificate="[Nothing]" ClientCertificatePassword="[Nothing]" DisplayName="HTTP GET Request" EndPoint="[RequestURL]" sap2010:WorkflowViewState.IdRef="HttpClient_1" Method="GET" Password="[Password]" ResourcePath="[FilePath]" StatusCode="[StatusCode]" TimeoutMS="[TimeoutMS]" Username="[Username]">
+    <ui:HttpClient Body="{x:Null}" ConsumerKey="{x:Null}" ConsumerSecret="{x:Null}" ContinueOnError="{x:Null}" OAuth1Token="{x:Null}" OAuth1TokenSecret="{x:Null}" OAuth2Token="{x:Null}" ResponseHeaders="{x:Null}" Result="{x:Null}" AcceptFormat="ANY" BodyFormat="application/json" ClientCertificate="[Nothing]" ClientCertificatePassword="[Nothing]" DisplayName="HTTP GET Request" EndPoint="[RequestURL]" sap2010:WorkflowViewState.IdRef="HttpClient_1" Method="GET" Password="[in_Password]" ResourcePath="[in_FilePath]" StatusCode="[out_StatusCode]" TimeoutMS="[in_TimeoutMS]" Username="[in_Username]">
       <ui:HttpClient.Attachments>
         <scg:Dictionary x:TypeArguments="x:String, InArgument(x:String)" />
       </ui:HttpClient.Attachments>
@@ -103,8 +103,8 @@
         <scg:Dictionary x:TypeArguments="x:String, InArgument(x:String)" />
       </ui:HttpClient.UrlSegments>
     </ui:HttpClient>
-    <WriteLine DisplayName="Write line Status Code" sap2010:WorkflowViewState.IdRef="WriteLine_2" Text="[&quot;Status code: &quot; + StatusCode.ToString]" />
-    <sads:DebugSymbol.Symbol>d0VDOlxVc2Vyc1xTaWx2aXVcRGVza3RvcFxTZXJ2aWNlTm93SW50ZWdyYXRpb25cRG93bmxvYWRBdHRhY2htZW50LnhhbWwVAWoBcAECTQNsDgIBAU80T0gCAQJSBVkOAgEaWgValQECARdbBWkVAgEGagVqngECAQNXMFeGAQIBHVQxVD0CARtaaFqSAQIBGFvRAlvcAgIBFlukBFuxBAIBFFvzA1v/AwIBEmRXZFsCARFbuwRbxwQCAQ9bhQNbkwMCAQ1jTmNSAgEMW9kDW+UDAgEKW6sCW7YCAgEJW4sEW5kEAgEHamhqmwECAQQ=</sads:DebugSymbol.Symbol>
+    <WriteLine DisplayName="Write line Status Code" sap2010:WorkflowViewState.IdRef="WriteLine_2" Text="[&quot;Status code: &quot; + out_StatusCode.ToString]" />
+    <sads:DebugSymbol.Symbol>d01EOlxSUEEgUHJvamVjdHNcX015R29Db21wb25lbnRzXFNlcnZpY2VOb3dBUElTbmlwcGV0c1xEb3dubG9hZEF0dGFjaG1lbnQueGFtbBUBbQFzAQJNA2wOAgEBTzRPSAIBAlIFWQ4CARpaBVqVAQIBF1sFaRUCAQZqBWqiAQIBA1cwV4wBAgEdVDFUPQIBG1poWpIBAgEYW9ECW9wCAgEWW64EW74EAgEUW/YDW4UEAgESZFdkWwIBEVvIBFvXBAIBD1uFA1uTAwIBDWNOY1ICAQxb2QNb6AMCAQpbqwJbtgICAQlbkQRbowQCAQdqaGqfAQIBBA==</sads:DebugSymbol.Symbol>
   </Sequence>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>
@@ -126,7 +126,7 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="GetAttachment_1" sap:VirtualizedContainerService.HintSize="304,672" />
+      <sap2010:ViewStateData Id="GetAttachment_1" sap:VirtualizedContainerService.HintSize="304,712" />
     </sap2010:ViewStateManager>
   </sap2010:WorkflowViewState.ViewStateManager>
 </Activity>

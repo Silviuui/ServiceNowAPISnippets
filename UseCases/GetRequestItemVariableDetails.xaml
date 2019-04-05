@@ -101,7 +101,6 @@
       <AssemblyReference>System.ValueTuple</AssemblyReference>
       <AssemblyReference>UiPath.System.Activities</AssemblyReference>
       <AssemblyReference>UiPath.UiAutomation.Activities</AssemblyReference>
-      <AssemblyReference>UiPath.Core</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
   <Sequence DisplayName="Get details from request item variables" sap2010:WorkflowViewState.IdRef="Sequence_6">
@@ -110,12 +109,12 @@
     </Sequence.Variables>
     <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke GetRequestItemVariables workflow" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_4" UnSafe="False" WorkflowFileName="GetRequestItemVariables.xaml">
       <ui:InvokeWorkflowFile.Arguments>
-        <InArgument x:TypeArguments="x:String" x:Key="InstanceURL">[ServiceNowUrl]</InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="Username">[Username]</InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="Password">[Password]</InArgument>
-        <OutArgument x:TypeArguments="scg:Dictionary(x:String, x:String)" x:Key="Result">[RequestItemVariables]</OutArgument>
-        <OutArgument x:TypeArguments="x:Int32" x:Key="StatusCode" />
-        <InArgument x:TypeArguments="x:String" x:Key="RequestItemID">[RequestItemID]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_InstanceURL">[ServiceNowUrl]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Username">[Username]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Password">[Password]</InArgument>
+        <OutArgument x:TypeArguments="scg:Dictionary(x:String, x:String)" x:Key="out_Result">[RequestItemVariables]</OutArgument>
+        <OutArgument x:TypeArguments="x:Int32" x:Key="out_StatusCode" />
+        <InArgument x:TypeArguments="x:String" x:Key="in_RequestItemID">[RequestItemID]</InArgument>
       </ui:InvokeWorkflowFile.Arguments>
     </ui:InvokeWorkflowFile>
     <ui:ForEach x:TypeArguments="x:String" DisplayName="For each user" sap2010:WorkflowViewState.IdRef="ForEach`1_7" Values="[Enumerable.Range(1, NumberOfUser).Select(Function(x) x.ToString)]">
@@ -198,7 +197,7 @@
         </ActivityAction>
       </ui:ForEach.Body>
     </ui:ForEach>
-    <sads:DebugSymbol.Symbol>d2NDOlxVc2Vyc1xXaW4xMFVzZXJcRGVza3RvcFxTZXJ2aWNlTm93QVBJU25pcHBldHMtbWFzdGVyXFVzZUNhc2VzXEdldFJlcXVlc3RJdGVtVmFyaWFibGVEZXRhaWxzLnhhbWwkawPKAQ4CAQFvBXgdAgExeQXIARICAQJxRHFTAgE7dkZ2VQIBOXJBcksCATd0WnRwAgE1c0FzSwIBM2/EAW/iAQIBMnl9ecEBAgEwfwvFARYCAQOIAQ2PARYCASqQAQ2XARYCASSYAQ2fARYCAR6gAQ2nARYCARmoAQ2zARICARK0AQ27ARYCAQy8AQ3DARYCAQbEAQ3EAZMDAgEEjQE/jQFvAgEtigFAigFOAgErlQE/lQFqAgEnkgFAkgFPAgElnQE/nQFoAgEhmgFAmgFIAgEfpQE/pQFmAgEcogFAogFLAgEaqAGrAqgBxQICAROqARGxARoCARW5AT+5AXECAQ+2AUC2AVACAQ3BAT/BAXcCAQm+AUC+AVYCAQfEAZMBxAGQAwIBBa8BPK8BPgIBGKwBPawBRQIBFg==</sads:DebugSymbol.Symbol>
+    <sads:DebugSymbol.Symbol>d2FEOlxSUEEgUHJvamVjdHNcX015R29Db21wb25lbnRzXFNlcnZpY2VOb3dBUElTbmlwcGV0c1xVc2VDYXNlc1xHZXRSZXF1ZXN0SXRlbVZhcmlhYmxlRGV0YWlscy54YW1sJGoDyQEOAgEBbgV3HQIBMXgFxwESAgECcEdwVgIBO3Nec3QCATl1SXVYAgE3cURxTgIBNW7EAW7iAQIBNHJEck4CATJ4lQF42QECATB+C8QBFgIBA4cBDY4BFgIBKo8BDZYBFgIBJJcBDZ4BFgIBHp8BDaYBFgIBGacBDbIBEgIBErMBDboBFgIBDLsBDcIBFgIBBsMBDcMBkwMCAQSMAT+MAW8CAS2JAUCJAU4CASuUAT+UAWoCASeRAUCRAU8CASWcAT+cAWgCASGZAUCZAUgCAR+kAT+kAWYCARyhAUChAUsCARqnAasCpwHFAgIBE6kBEbABGgIBFbgBP7gBcQIBD7UBQLUBUAIBDcABP8ABdwIBCb0BQL0BVgIBB8MBkwHDAZADAgEFrgE8rgE+AgEYqwE9qwFFAgEW</sads:DebugSymbol.Symbol>
   </Sequence>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>

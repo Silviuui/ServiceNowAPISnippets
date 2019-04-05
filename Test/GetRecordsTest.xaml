@@ -60,7 +60,6 @@
       <AssemblyReference>UiPath.Excel</AssemblyReference>
       <AssemblyReference>System.ValueTuple</AssemblyReference>
       <AssemblyReference>System.ComponentModel.Composition</AssemblyReference>
-      <AssemblyReference>System.Runtime.WindowsRuntime</AssemblyReference>
       <AssemblyReference>Newtonsoft.Json</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
@@ -74,12 +73,13 @@
       <Variable x:TypeArguments="njl:JArray" Name="TasksList" />
     </Sequence.Variables>
     <Sequence DisplayName="Get ServiceNow config values" sap2010:WorkflowViewState.IdRef="Sequence_1">
-      <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke GetConfigValues workflow" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_1" UnSafe="False" WorkflowFileName="Test\_GetConfigValues.xaml">
+      <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke GetConfigValues workflow" UnSafe="False" WorkflowFileName="Test\_GetConfigValues.xaml">
         <ui:InvokeWorkflowFile.Arguments>
-          <OutArgument x:TypeArguments="x:String" x:Key="ServiceNowUrl">[ServiceNowUrl]</OutArgument>
-          <OutArgument x:TypeArguments="x:String" x:Key="Username">[Username]</OutArgument>
-          <OutArgument x:TypeArguments="x:String" x:Key="Password">[Password]</OutArgument>
+          <OutArgument x:TypeArguments="x:String" x:Key="out_ServiceNowUrl">[ServiceNowUrl]</OutArgument>
+          <OutArgument x:TypeArguments="x:String" x:Key="out_Username">[Username]</OutArgument>
+          <OutArgument x:TypeArguments="x:String" x:Key="out_Password">[Password]</OutArgument>
         </ui:InvokeWorkflowFile.Arguments>
+        <sap2010:WorkflowViewState.IdRef>InvokeWorkflowFile_3</sap2010:WorkflowViewState.IdRef>
       </ui:InvokeWorkflowFile>
     </Sequence>
     <Assign sap2010:Annotation.AnnotationText="Please set the Query according to your configuration." DisplayName="Assign TaskListQuery" sap2010:WorkflowViewState.IdRef="Assign_1">
@@ -92,14 +92,14 @@
     </Assign>
     <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" sap2010:Annotation.AnnotationText="Get the list of tasks filtered by the query set above.&#xA;&#xA;Output contains 5 fields for each record:&#xA; - sys_id - the ID of the Task&#xA; - request - the ID of the Request&#xA; - request_item - the ID of the Request Item&#xA; - request_item.state&#xA; - request_item.u_number_of_users" DisplayName="Invoke GetRecords workflow" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_2" UnSafe="False" WorkflowFileName="GetRecords.xaml">
       <ui:InvokeWorkflowFile.Arguments>
-        <InArgument x:TypeArguments="x:String" x:Key="InstanceURL">[ServiceNowUrl]</InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="Username">[Username]</InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="Password">[Password]</InArgument>
-        <OutArgument x:TypeArguments="x:Int32" x:Key="StatusCode">[statusCode]</OutArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="Query">[TaskListQuery]</InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="TableName">sc_task</InArgument>
-        <OutArgument x:TypeArguments="njl:JArray" x:Key="Result">[TasksList]</OutArgument>
-        <InArgument x:TypeArguments="s:String[]" x:Key="OutputFields">[{"sys_id", "request_item", "request", "request_item.state", "request_item.u_number_of_users"}]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_InstanceURL">[ServiceNowUrl]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Username">[Username]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Password">[Password]</InArgument>
+        <OutArgument x:TypeArguments="x:Int32" x:Key="out_StatusCode">[statusCode]</OutArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Query">[TaskListQuery]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_TableName">sc_task</InArgument>
+        <OutArgument x:TypeArguments="njl:JArray" x:Key="out_Result">[TasksList]</OutArgument>
+        <InArgument x:TypeArguments="s:String[]" x:Key="in_OutputFields">[{"sys_id", "request_item", "request", "request_item.state", "request_item.u_number_of_users"}]</InArgument>
       </ui:InvokeWorkflowFile.Arguments>
     </ui:InvokeWorkflowFile>
     <ui:ForEach x:TypeArguments="njl:JObject" DisplayName="For each Task" sap2010:WorkflowViewState.IdRef="ForEach`1_1" Values="[TasksList]">
@@ -112,11 +112,11 @@
         </ActivityAction>
       </ui:ForEach.Body>
     </ui:ForEach>
-    <sads:DebugSymbol.Symbol>d05EOlxSUEEgUHJvamVjdHNcX015R29Db21wb25lbnRzXFNlcnZpY2VOb3dBUElTbmlwcGV0c1xUZXN0XEdldFJlY29yZHNUZXN0LnhhbWwYQwN0DgIBAUwFVBACARpVBVwOAgEWXQVoHQIBBmkFchICAQJNB1MfAgEbWjBaPwIBGVcxV0ACARdfRF9TAgEUZkdmpgECARNgQWBLAgERZUJlTQIBD2M+Y00CAQ1kQmRJAgEMYUFhSwIBCmJDYk8CAQhdgARdkQQCAQdpmAFppQECAQVvC2+eAgIBA09JT1gCASFQRFBOAgEfUURRTgIBHU2+AU3aAQIBHG9+b5sCAgEE</sads:DebugSymbol.Symbol>
+    <sads:DebugSymbol.Symbol>d05EOlxSUEEgUHJvamVjdHNcX015R29Db21wb25lbnRzXFNlcnZpY2VOb3dBUElTbmlwcGV0c1xUZXN0XEdldFJlY29yZHNUZXN0LnhhbWwYQgN0DgIBAUsFVBACARpVBVwOAgEWXQVoHQIBBmkFchICAQJMB1MfAgEbWjBaPwIBGVcxV0ACARdfR19WAgEUZUZlUQIBEmZKZqkBAgERYERgTgIBD2NBY1ACAQ1iR2JTAgELXYAEXZEEAgEKZEVkTAIBCWFEYU4CAQdpmAFppQECAQVvC2+eAgIBA1BIUFICASFPSE9SAgEfTk1OXAIBHUyHAUyjAQIBHG9+b5sCAgEE</sads:DebugSymbol.Symbol>
   </Sequence>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>
-      <sap2010:ViewStateData Id="InvokeWorkflowFile_1" sap:VirtualizedContainerService.HintSize="314,87" />
+      <sap2010:ViewStateData Id="InvokeWorkflowFile_3" sap:VirtualizedContainerService.HintSize="314,87" />
       <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="336,211">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
@@ -148,7 +148,7 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="GetRecordsTest_1" sap:VirtualizedContainerService.HintSize="398,1121" />
+      <sap2010:ViewStateData Id="GetRecordsTest_1" sap:VirtualizedContainerService.HintSize="398,1081" />
     </sap2010:ViewStateManager>
   </sap2010:WorkflowViewState.ViewStateManager>
 </Activity>

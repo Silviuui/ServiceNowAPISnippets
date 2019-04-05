@@ -72,25 +72,25 @@
       <Variable x:TypeArguments="x:Int32" Name="StatusCode" />
     </Sequence.Variables>
     <Sequence DisplayName="Get ServiceNow config values" sap2010:WorkflowViewState.IdRef="Sequence_3">
-      <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke GetConfigValues workflow" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_2" UnSafe="False" WorkflowFileName="Test\_GetConfigValues.xaml">
+      <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke GetConfigValues workflow" UnSafe="False" WorkflowFileName="Test\_GetConfigValues.xaml">
         <ui:InvokeWorkflowFile.Arguments>
-          <OutArgument x:TypeArguments="x:String" x:Key="ServiceNowUrl">[ServiceNowUrl]</OutArgument>
-          <OutArgument x:TypeArguments="x:String" x:Key="Username">[Username]</OutArgument>
-          <OutArgument x:TypeArguments="x:String" x:Key="Password">[Password]</OutArgument>
+          <OutArgument x:TypeArguments="x:String" x:Key="out_ServiceNowUrl">[ServiceNowUrl]</OutArgument>
+          <OutArgument x:TypeArguments="x:String" x:Key="out_Username">[Username]</OutArgument>
+          <OutArgument x:TypeArguments="x:String" x:Key="out_Password">[Password]</OutArgument>
         </ui:InvokeWorkflowFile.Arguments>
+        <sap2010:WorkflowViewState.IdRef>InvokeWorkflowFile_3</sap2010:WorkflowViewState.IdRef>
       </ui:InvokeWorkflowFile>
     </Sequence>
     <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke GetTableItem workflow" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_1" UnSafe="False" WorkflowFileName="GetRequestItemVariables.xaml">
       <ui:InvokeWorkflowFile.Arguments>
-        <InArgument x:TypeArguments="x:String" x:Key="InstanceURL">[ServiceNowUrl]</InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="Username">[Username]</InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="Password">[Password]</InArgument>
-        <OutArgument x:TypeArguments="scg:Dictionary(x:String, x:String)" x:Key="Result">[result]</OutArgument>
-        <OutArgument x:TypeArguments="x:Int32" x:Key="StatusCode">[StatusCode]</OutArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="RequestItemID">9082efc2db3f230084417dda8c961942</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_InstanceURL">[ServiceNowUrl]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Username">[Username]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Password">[Password]</InArgument>
+        <OutArgument x:TypeArguments="scg:Dictionary(x:String, x:String)" x:Key="out_Result">[result]</OutArgument>
+        <OutArgument x:TypeArguments="x:Int32" x:Key="out_StatusCode">[StatusCode]</OutArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_RequestItemID">9082efc2db3f230084417dda8c961942</InArgument>
       </ui:InvokeWorkflowFile.Arguments>
     </ui:InvokeWorkflowFile>
-    <WriteLine DisplayName="Write line GetRecord status code" sap2010:WorkflowViewState.IdRef="WriteLine_2" Text="[&quot;Status Code: &quot; + StatusCode.ToString]" />
     <ui:ForEach x:TypeArguments="scg:KeyValuePair(x:String, x:String)" DisplayName="For Each" sap2010:WorkflowViewState.IdRef="ForEach`1_2" Values="[result]">
       <ui:ForEach.Body>
         <ActivityAction x:TypeArguments="scg:KeyValuePair(x:String, x:String)">
@@ -103,11 +103,11 @@
         </ActivityAction>
       </ui:ForEach.Body>
     </ui:ForEach>
-    <sads:DebugSymbol.Symbol>d1NDOlxVc2Vyc1xTaWx2aXVcRGVza3RvcFxTZXJ2aWNlTm93SW50ZWdyYXRpb25cVGVzdFxHZXRSZXF1ZXN0SXRlbVZhcmlhYmxlc1Rlc3QueGFtbBZCA2sOAgEBSgVSEAIBGVMFXB0CAQxdBV2oAQIBCV4FaRICAQJLB1EfAgEaVURVUwIBF1pGWmYCARZWQVZLAgEUWFpYYgIBEldBV0sCARBZQ1lPAgEOU7kBU9cBAgENXXJdpQECAQperAFetgECAQdkC2YWAgEDTUlNWAIBIE5ETk4CAR5PRE9OAgEcS74BS9kBAgEbZQ1leAIBBGVkZXUCAQU=</sads:DebugSymbol.Symbol>
+    <sads:DebugSymbol.Symbol>d1tEOlxSUEEgUHJvamVjdHNcX015R29Db21wb25lbnRzXFNlcnZpY2VOb3dBUElTbmlwcGV0c1xUZXN0XEdldFJlcXVlc3RJdGVtVmFyaWFibGVzVGVzdC54YW1sFEIDaw4CAQFKBVMQAgEWVAVdHQIBCV4FaRICAQJLB1IfAgEXVkdWVgIBFFleWWYCARJbSVtpAgERV0RXTgIBD1pHWlMCAQ1UuQFU1wECAQxYRFhOAgEKXqwBXrYBAgEHZAtmFgIBA09IT1ICAR1OSE5SAgEbTU1NXAIBGUuHAUujAQIBGGUNZXgCAQRlZGV1AgEF</sads:DebugSymbol.Symbol>
   </Sequence>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>
-      <sap2010:ViewStateData Id="InvokeWorkflowFile_2" sap:VirtualizedContainerService.HintSize="314,87" />
+      <sap2010:ViewStateData Id="InvokeWorkflowFile_3" sap:VirtualizedContainerService.HintSize="314,87" />
       <sap2010:ViewStateData Id="Sequence_3" sap:VirtualizedContainerService.HintSize="336,211">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
@@ -117,7 +117,6 @@
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
       <sap2010:ViewStateData Id="InvokeWorkflowFile_1" sap:VirtualizedContainerService.HintSize="336,87" />
-      <sap2010:ViewStateData Id="WriteLine_2" sap:VirtualizedContainerService.HintSize="336,61" />
       <sap2010:ViewStateData Id="WriteLine_1" sap:VirtualizedContainerService.HintSize="210,61" />
       <sap2010:ViewStateData Id="Sequence_2" sap:VirtualizedContainerService.HintSize="232,185">
         <sap:WorkflowViewStateService.ViewState>
@@ -127,7 +126,7 @@
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
       <sap2010:ViewStateData Id="ForEach`1_2" sap:VirtualizedContainerService.HintSize="336,319" />
-      <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="358,994">
+      <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="358,893">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -135,7 +134,7 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="GetTableItemTest_1" sap:VirtualizedContainerService.HintSize="398,1074" />
+      <sap2010:ViewStateData Id="GetTableItemTest_1" sap:VirtualizedContainerService.HintSize="398,973" />
     </sap2010:ViewStateManager>
   </sap2010:WorkflowViewState.ViewStateManager>
 </Activity>

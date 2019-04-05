@@ -12,12 +12,12 @@
  xmlns:ui="http://schemas.uipath.com/workflow/activities"
  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <x:Members>
-    <x:Property sap2010:Annotation.AnnotationText="ServiceNow instance URL, for example &quot;https://dev123.servicenow.com&quot;." sap2010:WorkflowViewState.IdRef="DynamicActivityProperty_1" Name="InstanceURL" Type="InArgument(x:String)" />
-    <x:Property sap2010:Annotation.AnnotationText="Username for the basic authentication." sap2010:WorkflowViewState.IdRef="DynamicActivityProperty_2" Name="Username" Type="InArgument(x:String)" />
-    <x:Property sap2010:Annotation.AnnotationText="Password for the basic authentication." sap2010:WorkflowViewState.IdRef="DynamicActivityProperty_3" Name="Password" Type="InArgument(x:String)" />
-    <x:Property Name="Result" Type="OutArgument(scg:Dictionary(x:String, x:String))" />
-    <x:Property Name="StatusCode" Type="OutArgument(x:Int32)" />
-    <x:Property sap2010:Annotation.AnnotationText="Unique identifier of the Request Item for which to retrieve the variables." Name="RequestItemID" Type="InArgument(x:String)" />
+    <x:Property sap2010:Annotation.AnnotationText="ServiceNow instance URL, for example &quot;https://dev123.servicenow.com&quot;." sap2010:WorkflowViewState.IdRef="DynamicActivityProperty_1" Name="in_InstanceURL" Type="InArgument(x:String)" />
+    <x:Property sap2010:Annotation.AnnotationText="Username for the basic authentication." sap2010:WorkflowViewState.IdRef="DynamicActivityProperty_2" Name="in_Username" Type="InArgument(x:String)" />
+    <x:Property sap2010:Annotation.AnnotationText="Password for the basic authentication." sap2010:WorkflowViewState.IdRef="DynamicActivityProperty_3" Name="in_Password" Type="InArgument(x:String)" />
+    <x:Property Name="out_Result" Type="OutArgument(scg:Dictionary(x:String, x:String))" />
+    <x:Property Name="out_StatusCode" Type="OutArgument(x:Int32)" />
+    <x:Property sap2010:Annotation.AnnotationText="Unique identifier of the Request Item for which to retrieve the variables." Name="in_RequestItemID" Type="InArgument(x:String)" />
   </x:Members>
   <mva:VisualBasic.Settings>
     <x:Null />
@@ -77,27 +77,28 @@
       <AssemblyReference>UiPath.Mail</AssemblyReference>
       <AssemblyReference>UiPath.Excel</AssemblyReference>
       <AssemblyReference>System.ValueTuple</AssemblyReference>
+      <AssemblyReference>System.Runtime.WindowsRuntime</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence sap2010:Annotation.AnnotationText="This method retrieves the variables for a given request item.&#xA;Only the variable name (internal) and value are retrieved.&#xA;&#xA;The request is authenticated using HTTP Basic Authentication (secure only when secure HTTP is used).&#xA;&#xA;Uses the GetRecords.xaml workflow configured for the Variables table (sc_item_option_mtom), the query parameter for Request Item filtering and the output includes only two fields - variable's name and value.&#xD;&#xA;&#xD;&#xA;A value of 2xx (200, 201, 202, etc.) for StatusCode means Success. " DisplayName="Get Request Item Variables" sap2010:WorkflowViewState.IdRef="Sequence_2">
+  <Sequence sap2010:Annotation.AnnotationText="This method retrieves the variables for a given request item.&#xA;Only the variable name (internal) and value are retrieved.&#xA;&#xA;The request is authenticated using HTTP Basic Authentication (secure only when secure HTTP is used).&#xA;&#xA;Uses the GetRecords.xaml workflow configured for the Variables table (sc_item_option_mtom), the query parameter for Request Item filtering and the output includes only two fields - variable's name and value.&#xA;&#xA;A value of 2xx (200, 201, 202, etc.) for StatusCode means Success. " DisplayName="Get Request Item Variables" sap2010:WorkflowViewState.IdRef="Sequence_2">
     <Sequence.Variables>
       <Variable x:TypeArguments="njl:JArray" Name="VariablesJArray" />
     </Sequence.Variables>
     <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke GetRecords workflow" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_1" UnSafe="False" WorkflowFileName="GetRecords.xaml">
       <ui:InvokeWorkflowFile.Arguments>
-        <InArgument x:TypeArguments="x:String" x:Key="InstanceURL">[InstanceURL]</InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="Username">[Username]</InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="Password">[Password]</InArgument>
-        <OutArgument x:TypeArguments="x:Int32" x:Key="StatusCode">[StatusCode]</OutArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="Query">["request_item=" + RequestItemID]</InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="TableName">sc_item_option_mtom</InArgument>
-        <OutArgument x:TypeArguments="njl:JArray" x:Key="Result">[VariablesJArray]</OutArgument>
-        <InArgument x:TypeArguments="s:String[]" x:Key="OutputFields">[{"sc_item_option.item_option_new.name","sc_item_option.value"}]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_InstanceURL">[in_InstanceURL]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Username">[in_Username]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Password">[in_Password]</InArgument>
+        <OutArgument x:TypeArguments="x:Int32" x:Key="out_StatusCode">[out_StatusCode]</OutArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Query">["request_item=" + in_RequestItemID]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_TableName">sc_item_option_mtom</InArgument>
+        <OutArgument x:TypeArguments="njl:JArray" x:Key="out_Result">[VariablesJArray]</OutArgument>
+        <InArgument x:TypeArguments="s:String[]" x:Key="in_OutputFields">[{"sc_item_option.item_option_new.name","sc_item_option.value"}]</InArgument>
       </ui:InvokeWorkflowFile.Arguments>
     </ui:InvokeWorkflowFile>
     <Assign DisplayName="Initialize the Result dictionary" sap2010:WorkflowViewState.IdRef="Assign_5">
       <Assign.To>
-        <OutArgument x:TypeArguments="scg:Dictionary(x:String, x:String)">[Result]</OutArgument>
+        <OutArgument x:TypeArguments="scg:Dictionary(x:String, x:String)">[out_Result]</OutArgument>
       </Assign.To>
       <Assign.Value>
         <InArgument x:TypeArguments="scg:Dictionary(x:String, x:String)">[new Dictionary(of String, String)]</InArgument>
@@ -111,7 +112,7 @@
           </ActivityAction.Argument>
           <Assign DisplayName="Add Result entry" sap2010:WorkflowViewState.IdRef="Assign_6">
             <Assign.To>
-              <OutArgument x:TypeArguments="x:String">[Result(item("sc_item_option.item_option_new.name").ToString)]</OutArgument>
+              <OutArgument x:TypeArguments="x:String">[out_Result(item("sc_item_option.item_option_new.name").ToString)]</OutArgument>
             </Assign.To>
             <Assign.Value>
               <InArgument x:TypeArguments="x:String">[item("sc_item_option.value").ToString]</InArgument>
@@ -120,7 +121,7 @@
         </ActivityAction>
       </ui:ForEach.Body>
     </ui:ForEach>
-    <sads:DebugSymbol.Symbol>d0pDOlxVc2Vyc1xTaWx2aXVcRGVza3RvcFxTZXJ2aWNlTm93SW50ZWdyYXRpb25cR2V0UmVxdWVzdEl0ZW1WYXJpYWJsZXMueGFtbBNSA3wOAgEBVgVhHQIBC2IFaQ4CAQdqBXoSAgECWERYUQIBGV9HX4cBAgEYWUFZSwIBFl5CXlMCARRcPlxfAgESXUJdVQIBEVpBWksCAQ9bQ1tPAgENVrcBVsgBAgEMZ0pnbQIBCmRLZFMCAQhqsQNqxAMCAQZwC3cUAgEDdTZ1XQIBBXI3cnUCAQQ=</sads:DebugSymbol.Symbol>
+    <sads:DebugSymbol.Symbol>d1JEOlxSUEEgUHJvamVjdHNcX015R29Db21wb25lbnRzXFNlcnZpY2VOb3dBUElTbmlwcGV0c1xHZXRSZXF1ZXN0SXRlbVZhcmlhYmxlcy54YW1sE1MDfQ4CAQFXBWIdAgELYwVqDgIBB2sFexICAQJZR1lXAgEZX0ZfVwIBF2BKYIoBAgEWWkRaUQIBFF1BXWUCARJcR1xXAgEQV7cBV8gBAgEPXkVeWAIBDltEW1ECAQxoSmhtAgEKZUtlVwIBCGuxA2vEAwIBBnELeBQCAQN2NnZdAgEFczdzeQIBBA==</sads:DebugSymbol.Symbol>
   </Sequence>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>

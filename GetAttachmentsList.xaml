@@ -1,4 +1,4 @@
-﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="GetAttachmentsList" this:GetAttachmentsList.TimeoutMS="20000"
+﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="GetAttachmentsList" this:GetAttachmentsList.in_TimeoutMS="20000"
  xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
  xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities"
@@ -13,15 +13,15 @@
  xmlns:ui="http://schemas.uipath.com/workflow/activities"
  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <x:Members>
-    <x:Property sap2010:Annotation.AnnotationText="The name of the table of the specified record you want to get attachments list." Name="TableName" Type="InArgument(x:String)" />
-    <x:Property sap2010:Annotation.AnnotationText="The identifier (sys_id) of the record on the specified table that you want to get attachments list." Name="RecordId" Type="InArgument(x:String)" />
-    <x:Property sap2010:Annotation.AnnotationText="Maximum number of results to return." Name="Limit" Type="InArgument(x:Int32)" />
-    <x:Property sap2010:Annotation.AnnotationText="ServiceNow instance URL, for example &quot;https://dev123.servicenow.com&quot;." Name="InstanceURL" Type="InArgument(x:String)" />
-    <x:Property sap2010:Annotation.AnnotationText="Username for ServiceNow basic authentication." Name="Username" Type="InArgument(x:String)" />
-    <x:Property sap2010:Annotation.AnnotationText="Password for ServiceNow basic authentication." Name="Password" Type="InArgument(x:String)" />
-    <x:Property Name="StatusCode" Type="OutArgument(x:Int32)" />
-    <x:Property Name="Result" Type="OutArgument(sd:DataTable)" />
-    <x:Property sap2010:Annotation.AnnotationText="The maximum time, in milliseconds, to wait for the HTTP request to complete." Name="TimeoutMS" Type="InArgument(x:Int32)" />
+    <x:Property sap2010:Annotation.AnnotationText="The name of the table of the specified record you want to get attachments list." Name="in_TableName" Type="InArgument(x:String)" />
+    <x:Property sap2010:Annotation.AnnotationText="The identifier (sys_id) of the record on the specified table that you want to get attachments list." Name="in_RecordId" Type="InArgument(x:String)" />
+    <x:Property sap2010:Annotation.AnnotationText="Maximum number of results to return." Name="in_Limit" Type="InArgument(x:Int32)" />
+    <x:Property sap2010:Annotation.AnnotationText="ServiceNow instance URL, for example &quot;https://dev123.servicenow.com&quot;." Name="in_InstanceURL" Type="InArgument(x:String)" />
+    <x:Property sap2010:Annotation.AnnotationText="Username for ServiceNow basic authentication." Name="in_Username" Type="InArgument(x:String)" />
+    <x:Property sap2010:Annotation.AnnotationText="Password for ServiceNow basic authentication." Name="in_Password" Type="InArgument(x:String)" />
+    <x:Property Name="out_StatusCode" Type="OutArgument(x:Int32)" />
+    <x:Property Name="out_Result" Type="OutArgument(sd:DataTable)" />
+    <x:Property sap2010:Annotation.AnnotationText="The maximum time, in milliseconds, to wait for the HTTP request to complete." Name="in_TimeoutMS" Type="InArgument(x:Int32)" />
   </x:Members>
   <mva:VisualBasic.Settings>
     <x:Null />
@@ -80,9 +80,10 @@
       <AssemblyReference>System.ComponentModel.Composition</AssemblyReference>
       <AssemblyReference>Newtonsoft.Json</AssemblyReference>
       <AssemblyReference>UiPath.Cryptography</AssemblyReference>
+      <AssemblyReference>System.Runtime.WindowsRuntime</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence sap2010:Annotation.AnnotationText="This workflow gets the attachments list for a record in a given table.&#xA;&#xA;The output if formated as a DataTable with 4 columns: sys_id, file_name, content_type and size_bytes.&#xD;&#xA;&#xD;&#xA;A value of 2xx (200, 201, 202, etc.) for StatusCode means Success. " DisplayName="Get Attachments List" sap2010:WorkflowViewState.IdRef="Sequence_1">
+  <Sequence sap2010:Annotation.AnnotationText="This workflow gets the attachments list for a record in a given table.&#xA;&#xA;The output if formated as a DataTable with 4 columns: sys_id, file_name, content_type and size_bytes.&#xA;&#xA;A value of 2xx (200, 201, 202, etc.) for StatusCode means Success. " DisplayName="Get Attachments List" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <Sequence.Variables>
       <Variable x:TypeArguments="x:String" Default="api/now/attachment" Modifiers="ReadOnly" Name="AttachmentAPIEndpoint" />
       <Variable x:TypeArguments="x:String" Name="RequestURL" />
@@ -93,11 +94,11 @@
         <OutArgument x:TypeArguments="x:String">[RequestURL]</OutArgument>
       </Assign.To>
       <Assign.Value>
-        <InArgument x:TypeArguments="x:String">[String.Format("{0}/{1}?sysparm_query=table_name={2}^table_sys_id={3}&amp;sysparm_limit={4}", InstanceURL, AttachmentAPIEndpoint, TableName, RecordId, Limit)]</InArgument>
+        <InArgument x:TypeArguments="x:String">[String.Format("{0}/{1}?sysparm_query=table_name={2}^table_sys_id={3}&amp;sysparm_limit={4}", in_InstanceURL, AttachmentAPIEndpoint, in_TableName, in_RecordId, in_Limit)]</InArgument>
       </Assign.Value>
     </Assign>
     <WriteLine DisplayName="Write line Request URL" sap2010:WorkflowViewState.IdRef="WriteLine_1" Text="[&quot;Request URL: &quot; + RequestURL]" />
-    <ui:HttpClient Body="{x:Null}" ConsumerKey="{x:Null}" ConsumerSecret="{x:Null}" ContinueOnError="{x:Null}" OAuth1Token="{x:Null}" OAuth1TokenSecret="{x:Null}" OAuth2Token="{x:Null}" ResourcePath="{x:Null}" ResponseHeaders="{x:Null}" AcceptFormat="JSON" BodyFormat="application/json" ClientCertificate="[Nothing]" ClientCertificatePassword="[Nothing]" DisplayName="HTTP GET Request" EndPoint="[RequestURL]" sap2010:WorkflowViewState.IdRef="HttpClient_1" Method="GET" Password="[Password]" Result="[ResultString]" StatusCode="[StatusCode]" TimeoutMS="[TimeoutMS]" Username="[Username]">
+    <ui:HttpClient Body="{x:Null}" ConsumerKey="{x:Null}" ConsumerSecret="{x:Null}" ContinueOnError="{x:Null}" OAuth1Token="{x:Null}" OAuth1TokenSecret="{x:Null}" OAuth2Token="{x:Null}" ResourcePath="{x:Null}" ResponseHeaders="{x:Null}" AcceptFormat="JSON" BodyFormat="application/json" ClientCertificate="[Nothing]" ClientCertificatePassword="[Nothing]" DisplayName="HTTP GET Request" EndPoint="[RequestURL]" sap2010:WorkflowViewState.IdRef="HttpClient_1" Method="GET" Password="[in_Password]" Result="[ResultString]" StatusCode="[out_StatusCode]" TimeoutMS="[in_TimeoutMS]" Username="[in_Username]">
       <ui:HttpClient.Attachments>
         <scg:Dictionary x:TypeArguments="x:String, InArgument(x:String)" />
       </ui:HttpClient.Attachments>
@@ -112,25 +113,25 @@
         <scg:Dictionary x:TypeArguments="x:String, InArgument(x:String)" />
       </ui:HttpClient.UrlSegments>
     </ui:HttpClient>
-    <WriteLine DisplayName="Write line Status Code" sap2010:WorkflowViewState.IdRef="WriteLine_3" Text="[&quot;Status code: &quot; + StatusCode.ToString]" />
+    <WriteLine DisplayName="Write line Status Code" sap2010:WorkflowViewState.IdRef="WriteLine_3" Text="[&quot;Status code: &quot; + out_StatusCode.ToString]" />
     <Sequence DisplayName="Format output" sap2010:WorkflowViewState.IdRef="Sequence_3">
       <Sequence.Variables>
         <Variable x:TypeArguments="njl:JObject" Name="jObject" />
       </Sequence.Variables>
       <ui:DeserializeJson x:TypeArguments="njl:JObject" DisplayName="Deserialize JSON" sap2010:WorkflowViewState.IdRef="DeserializeJson`1_1" JsonObject="[jObject]" JsonString="[ResultString]" />
-      <ui:BuildDataTable DataTable="[Result]" DisplayName="Build Data Table - Prepare Result DT" sap2010:WorkflowViewState.IdRef="BuildDataTable_1" TableInfo="&lt;NewDataSet&gt;&#xA;  &lt;xs:schema id=&quot;NewDataSet&quot; xmlns=&quot;&quot; xmlns:xs=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:msdata=&quot;urn:schemas-microsoft-com:xml-msdata&quot;&gt;&#xA;    &lt;xs:element name=&quot;NewDataSet&quot; msdata:IsDataSet=&quot;true&quot; msdata:MainDataTable=&quot;TableName&quot; msdata:UseCurrentLocale=&quot;true&quot;&gt;&#xA;      &lt;xs:complexType&gt;&#xA;        &lt;xs:choice minOccurs=&quot;0&quot; maxOccurs=&quot;unbounded&quot;&gt;&#xA;          &lt;xs:element name=&quot;TableName&quot;&gt;&#xA;            &lt;xs:complexType&gt;&#xA;              &lt;xs:sequence&gt;&#xA;                &lt;xs:element name=&quot;sys_id&quot;&gt;&#xA;                  &lt;xs:simpleType&gt;&#xA;                    &lt;xs:restriction base=&quot;xs:string&quot;&gt;&#xA;                      &lt;xs:maxLength value=&quot;100&quot; /&gt;&#xA;                    &lt;/xs:restriction&gt;&#xA;                  &lt;/xs:simpleType&gt;&#xA;                &lt;/xs:element&gt;&#xA;                &lt;xs:element name=&quot;file_name&quot; type=&quot;xs:string&quot; minOccurs=&quot;0&quot; /&gt;&#xA;                &lt;xs:element name=&quot;content_type&quot; type=&quot;xs:string&quot; minOccurs=&quot;0&quot; /&gt;&#xA;                &lt;xs:element name=&quot;size_bytes&quot; type=&quot;xs:int&quot; minOccurs=&quot;0&quot; /&gt;&#xA;              &lt;/xs:sequence&gt;&#xA;            &lt;/xs:complexType&gt;&#xA;          &lt;/xs:element&gt;&#xA;        &lt;/xs:choice&gt;&#xA;      &lt;/xs:complexType&gt;&#xA;    &lt;/xs:element&gt;&#xA;  &lt;/xs:schema&gt;&#xA;&lt;/NewDataSet&gt;" />
+      <ui:BuildDataTable DataTable="[out_Result]" DisplayName="Build Data Table - Prepare Result DT" sap2010:WorkflowViewState.IdRef="BuildDataTable_1" TableInfo="&lt;NewDataSet&gt;&#xA;  &lt;xs:schema id=&quot;NewDataSet&quot; xmlns=&quot;&quot; xmlns:xs=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:msdata=&quot;urn:schemas-microsoft-com:xml-msdata&quot;&gt;&#xA;    &lt;xs:element name=&quot;NewDataSet&quot; msdata:IsDataSet=&quot;true&quot; msdata:MainDataTable=&quot;TableName&quot; msdata:UseCurrentLocale=&quot;true&quot;&gt;&#xA;      &lt;xs:complexType&gt;&#xA;        &lt;xs:choice minOccurs=&quot;0&quot; maxOccurs=&quot;unbounded&quot;&gt;&#xA;          &lt;xs:element name=&quot;TableName&quot;&gt;&#xA;            &lt;xs:complexType&gt;&#xA;              &lt;xs:sequence&gt;&#xA;                &lt;xs:element name=&quot;sys_id&quot;&gt;&#xA;                  &lt;xs:simpleType&gt;&#xA;                    &lt;xs:restriction base=&quot;xs:string&quot;&gt;&#xA;                      &lt;xs:maxLength value=&quot;100&quot; /&gt;&#xA;                    &lt;/xs:restriction&gt;&#xA;                  &lt;/xs:simpleType&gt;&#xA;                &lt;/xs:element&gt;&#xA;                &lt;xs:element name=&quot;file_name&quot; type=&quot;xs:string&quot; minOccurs=&quot;0&quot; /&gt;&#xA;                &lt;xs:element name=&quot;content_type&quot; type=&quot;xs:string&quot; minOccurs=&quot;0&quot; /&gt;&#xA;                &lt;xs:element name=&quot;size_bytes&quot; type=&quot;xs:int&quot; minOccurs=&quot;0&quot; /&gt;&#xA;              &lt;/xs:sequence&gt;&#xA;            &lt;/xs:complexType&gt;&#xA;          &lt;/xs:element&gt;&#xA;        &lt;/xs:choice&gt;&#xA;      &lt;/xs:complexType&gt;&#xA;    &lt;/xs:element&gt;&#xA;  &lt;/xs:schema&gt;&#xA;&lt;/NewDataSet&gt;" />
       <ui:ForEach x:TypeArguments="njl:JToken" DisplayName="For Each Attachment item" sap2010:WorkflowViewState.IdRef="ForEach`1_1" Values="[jObject(&quot;result&quot;)]">
         <ui:ForEach.Body>
           <ActivityAction x:TypeArguments="njl:JToken">
             <ActivityAction.Argument>
               <DelegateInArgument x:TypeArguments="njl:JToken" Name="item" />
             </ActivityAction.Argument>
-            <ui:AddDataRow DataRow="{x:Null}" ArrayRow="[{item(&quot;sys_id&quot;), item(&quot;file_name&quot;), item(&quot;content_type&quot;), CInt(item(&quot;size_bytes&quot;))}]" DataTable="[Result]" DisplayName="Add Data Row" sap2010:WorkflowViewState.IdRef="AddDataRow_1" />
+            <ui:AddDataRow DataRow="{x:Null}" ArrayRow="[{item(&quot;sys_id&quot;), item(&quot;file_name&quot;), item(&quot;content_type&quot;), CInt(item(&quot;size_bytes&quot;))}]" DataTable="[out_Result]" DisplayName="Add Data Row" sap2010:WorkflowViewState.IdRef="AddDataRow_1" />
           </ActivityAction>
         </ui:ForEach.Body>
       </ui:ForEach>
     </Sequence>
-    <sads:DebugSymbol.Symbol>d0VDOlxVc2Vyc1xTaWx2aXVcRGVza3RvcFxTZXJ2aWNlTm93SW50ZWdyYXRpb25cR2V0QXR0YWNobWVudHNMaXN0LnhhbWwgAWoBcAECVQOGAQ4CAQFXNFdIAgECWwViDgIBKWMFY5UBAgEmZAVyFQIBFXMFc54BAgESdAWEARACAQNgMGDOAQIBLF0xXT0CASpjaGOSAQIBJ2TYAmTjAgIBJWSpBGS2BAIBI21XbVsCASJkwARkzAQCASBk9ANkhAQCAR5kjANkmgMCARxsTmxSAgEbZOADZOwDAgEZZLICZL0CAgEYZJAEZJ4EAgEWc2hzmwECARN4B3jDAQIBDXkHeYIOAgEKegeDARQCAQR4sAF4wAECARB4mQF4pAECAQ55JHkuAgELeqQBesMBAgEJgAENgAGZAgIBBYABwgGAAcwBAgEHgAE4gAG3AQIBBg==</sads:DebugSymbol.Symbol>
+    <sads:DebugSymbol.Symbol>d01EOlxSUEEgUHJvamVjdHNcX015R29Db21wb25lbnRzXFNlcnZpY2VOb3dBUElTbmlwcGV0c1xHZXRBdHRhY2htZW50c0xpc3QueGFtbCABbQFzAQJWA4cBDgIBAVg0WEgCAQJcBWMOAgEpZAVklQECASZlBXMVAgEVdAV0ogECARJ1BYUBEAIBA2EwYdoBAgEsXjFePQIBKmRoZJIBAgEnZdgCZeMCAgElZbAEZcAEAgEjblduWwIBImXKBGXZBAIBIGX3A2WHBAIBHmWMA2WaAwIBHG1ObVICARtl4ANl7wMCARllsgJlvQICARhlkwRlpQQCARZ0aHSfAQIBE3kHecMBAgENegd6hg4CAQp7B4QBFAIBBHmwAXnAAQIBEHmZAXmkAQIBDnokejICAQt7pAF7wwECAQmBAQ2BAZ0CAgEFgQHCAYEB0AECAQeBATiBAbcBAgEG</sads:DebugSymbol.Symbol>
   </Sequence>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>
@@ -147,15 +148,15 @@
       <sap2010:ViewStateData Id="DeserializeJson`1_1" sap:VirtualizedContainerService.HintSize="314,60" />
       <sap2010:ViewStateData Id="BuildDataTable_1" sap:VirtualizedContainerService.HintSize="314,59" />
       <sap2010:ViewStateData Id="AddDataRow_1" sap:VirtualizedContainerService.HintSize="200,22" />
-      <sap2010:ViewStateData Id="ForEach`1_1" sap:VirtualizedContainerService.HintSize="314,195" />
-      <sap2010:ViewStateData Id="Sequence_3" sap:VirtualizedContainerService.HintSize="336,518">
+      <sap2010:ViewStateData Id="ForEach`1_1" sap:VirtualizedContainerService.HintSize="314,194" />
+      <sap2010:ViewStateData Id="Sequence_3" sap:VirtualizedContainerService.HintSize="336,517">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="358,1165">
+      <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="358,1164">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -163,7 +164,7 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="GetAttachments_1" sap:VirtualizedContainerService.HintSize="398,1245" />
+      <sap2010:ViewStateData Id="GetAttachments_1" sap:VirtualizedContainerService.HintSize="398,1244" />
     </sap2010:ViewStateManager>
   </sap2010:WorkflowViewState.ViewStateManager>
 </Activity>
