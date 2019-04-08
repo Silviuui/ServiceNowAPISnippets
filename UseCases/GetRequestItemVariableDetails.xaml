@@ -113,7 +113,6 @@
         <InArgument x:TypeArguments="x:String" x:Key="in_Username">[Username]</InArgument>
         <InArgument x:TypeArguments="x:String" x:Key="in_Password">[Password]</InArgument>
         <OutArgument x:TypeArguments="scg:Dictionary(x:String, x:String)" x:Key="out_Result">[RequestItemVariables]</OutArgument>
-        <OutArgument x:TypeArguments="x:Int32" x:Key="out_StatusCode" />
         <InArgument x:TypeArguments="x:String" x:Key="in_RequestItemID">[RequestItemID]</InArgument>
       </ui:InvokeWorkflowFile.Arguments>
     </ui:InvokeWorkflowFile>
@@ -197,7 +196,7 @@
         </ActivityAction>
       </ui:ForEach.Body>
     </ui:ForEach>
-    <sads:DebugSymbol.Symbol>d2FEOlxSUEEgUHJvamVjdHNcX015R29Db21wb25lbnRzXFNlcnZpY2VOb3dBUElTbmlwcGV0c1xVc2VDYXNlc1xHZXRSZXF1ZXN0SXRlbVZhcmlhYmxlRGV0YWlscy54YW1sJGoDyQEOAgEBbgV3HQIBMXgFxwESAgECcEdwVgIBO3Nec3QCATl1SXVYAgE3cURxTgIBNW7EAW7iAQIBNHJEck4CATJ4lQF42QECATB+C8QBFgIBA4cBDY4BFgIBKo8BDZYBFgIBJJcBDZ4BFgIBHp8BDaYBFgIBGacBDbIBEgIBErMBDboBFgIBDLsBDcIBFgIBBsMBDcMBkwMCAQSMAT+MAW8CAS2JAUCJAU4CASuUAT+UAWoCASeRAUCRAU8CASWcAT+cAWgCASGZAUCZAUgCAR+kAT+kAWYCARyhAUChAUsCARqnAasCpwHFAgIBE6kBEbABGgIBFbgBP7gBcQIBD7UBQLUBUAIBDcABP8ABdwIBCb0BQL0BVgIBB8MBkwHDAZADAgEFrgE8rgE+AgEYqwE9qwFFAgEW</sads:DebugSymbol.Symbol>
+    <sads:DebugSymbol.Symbol>d2FEOlxSUEEgUHJvamVjdHNcX015R29Db21wb25lbnRzXFNlcnZpY2VOb3dBUElTbmlwcGV0c1xVc2VDYXNlc1xHZXRSZXF1ZXN0SXRlbVZhcmlhYmxlRGV0YWlscy54YW1sJGoDyAEOAgEBbgV2HQIBMXcFxgESAgECcEdwVgIBO3Nec3QCATl0SXRYAgE3cURxTgIBNW7EAW7iAQIBNHJEck4CATJ3lQF32QECATB9C8MBFgIBA4YBDY0BFgIBKo4BDZUBFgIBJJYBDZ0BFgIBHp4BDaUBFgIBGaYBDbEBEgIBErIBDbkBFgIBDLoBDcEBFgIBBsIBDcIBkwMCAQSLAT+LAW8CAS2IAUCIAU4CASuTAT+TAWoCASeQAUCQAU8CASWbAT+bAWgCASGYAUCYAUgCAR+jAT+jAWYCARygAUCgAUsCARqmAasCpgHFAgIBE6gBEa8BGgIBFbcBP7cBcQIBD7QBQLQBUAIBDb8BP78BdwIBCbwBQLwBVgIBB8IBkwHCAZADAgEFrQE8rQE+AgEYqgE9qgFFAgEW</sads:DebugSymbol.Symbol>
   </Sequence>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>

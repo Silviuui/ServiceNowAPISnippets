@@ -57,6 +57,7 @@
       <AssemblyReference>UiPath.Excel</AssemblyReference>
       <AssemblyReference>System.ValueTuple</AssemblyReference>
       <AssemblyReference>System.ComponentModel.Composition</AssemblyReference>
+      <AssemblyReference>System.Runtime.WindowsRuntime</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
   <Sequence sap2010:Annotation.AnnotationText="Before running this unit test, please make sure you set the correct values for the ServiceNow configuration (URL, Username and Password) in the Config file and for the invoked workflow file." DisplayName="DownloadAttachmentTest" sap2010:WorkflowViewState.IdRef="Sequence_1">
@@ -81,11 +82,10 @@
         <InArgument x:TypeArguments="x:String" x:Key="in_Username">[Username]</InArgument>
         <InArgument x:TypeArguments="x:String" x:Key="in_Password">[Password]</InArgument>
         <InArgument x:TypeArguments="x:String" x:Key="in_AttachementID">c063b22bdb73230084417dda8c961997</InArgument>
-        <OutArgument x:TypeArguments="x:Int32" x:Key="out_StatusCode">[StatusCode]</OutArgument>
         <InArgument x:TypeArguments="x:String" x:Key="in_FilePath">["numbers"+Now.ToFileTime.ToString+".txt"]</InArgument>
       </ui:InvokeWorkflowFile.Arguments>
     </ui:InvokeWorkflowFile>
-    <sads:DebugSymbol.Symbol>d1ZEOlxSUEEgUHJvamVjdHNcX015R29Db21wb25lbnRzXFNlcnZpY2VOb3dBUElTbmlwcGV0c1xUZXN0XERvd25sb2FkQXR0YWNobWVudFRlc3QueGFtbA8+A1kOAgEBRQVNEAIBDk4FVx0CAQJGB0wfAgEPU0lTaQIBDVBHUFYCAQtVRFVuAgEKUURRTgIBCFRHVFMCAQZOuQFO0gECAQVSRFJOAgEDSkhKUgIBFUlISVICARNITUhcAgERRr4BRtoBAgEQ</sads:DebugSymbol.Symbol>
+    <sads:DebugSymbol.Symbol>d1ZEOlxSUEEgUHJvamVjdHNcX015R29Db21wb25lbnRzXFNlcnZpY2VOb3dBUElTbmlwcGV0c1xUZXN0XERvd25sb2FkQXR0YWNobWVudFRlc3QueGFtbA4/A1kOAgEBRgVOEAIBDE8FVx0CAQJHB00fAgENVElUaQIBC1FHUVYCAQlVRFVuAgEIUkRSTgIBBk+5AU/SAQIBBVNEU04CAQNLSEtSAgETSkhKUgIBEUlNSVwCAQ9HvgFH2gECAQ4=</sads:DebugSymbol.Symbol>
   </Sequence>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>

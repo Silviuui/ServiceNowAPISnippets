@@ -19,7 +19,6 @@
     <x:Property sap2010:Annotation.AnnotationText="ServiceNow instance URL, for example &quot;https://dev123.servicenow.com&quot;." Name="in_InstanceURL" Type="InArgument(x:String)" />
     <x:Property sap2010:Annotation.AnnotationText="Username for ServiceNow basic authentication." Name="in_Username" Type="InArgument(x:String)" />
     <x:Property sap2010:Annotation.AnnotationText="Password for ServiceNow basic authentication." Name="in_Password" Type="InArgument(x:String)" />
-    <x:Property Name="out_StatusCode" Type="OutArgument(x:Int32)" />
     <x:Property Name="out_Result" Type="OutArgument(sd:DataTable)" />
     <x:Property sap2010:Annotation.AnnotationText="The maximum time, in milliseconds, to wait for the HTTP request to complete." Name="in_TimeoutMS" Type="InArgument(x:Int32)" />
   </x:Members>
@@ -88,6 +87,7 @@
       <Variable x:TypeArguments="x:String" Default="api/now/attachment" Modifiers="ReadOnly" Name="AttachmentAPIEndpoint" />
       <Variable x:TypeArguments="x:String" Name="RequestURL" />
       <Variable x:TypeArguments="x:String" Name="ResultString" />
+      <Variable x:TypeArguments="x:Int32" Name="StatusCode" />
     </Sequence.Variables>
     <Assign sap2010:Annotation.AnnotationText="Format the URL for the request." DisplayName="Assign RequestURL" sap2010:WorkflowViewState.IdRef="Assign_1">
       <Assign.To>
@@ -98,7 +98,7 @@
       </Assign.Value>
     </Assign>
     <WriteLine DisplayName="Write line Request URL" sap2010:WorkflowViewState.IdRef="WriteLine_1" Text="[&quot;Request URL: &quot; + RequestURL]" />
-    <ui:HttpClient Body="{x:Null}" ConsumerKey="{x:Null}" ConsumerSecret="{x:Null}" ContinueOnError="{x:Null}" OAuth1Token="{x:Null}" OAuth1TokenSecret="{x:Null}" OAuth2Token="{x:Null}" ResourcePath="{x:Null}" ResponseHeaders="{x:Null}" AcceptFormat="JSON" BodyFormat="application/json" ClientCertificate="[Nothing]" ClientCertificatePassword="[Nothing]" DisplayName="HTTP GET Request" EndPoint="[RequestURL]" sap2010:WorkflowViewState.IdRef="HttpClient_1" Method="GET" Password="[in_Password]" Result="[ResultString]" StatusCode="[out_StatusCode]" TimeoutMS="[in_TimeoutMS]" Username="[in_Username]">
+    <ui:HttpClient Body="{x:Null}" ConsumerKey="{x:Null}" ConsumerSecret="{x:Null}" ContinueOnError="{x:Null}" OAuth1Token="{x:Null}" OAuth1TokenSecret="{x:Null}" OAuth2Token="{x:Null}" ResourcePath="{x:Null}" ResponseHeaders="{x:Null}" AcceptFormat="JSON" BodyFormat="application/json" ClientCertificate="[Nothing]" ClientCertificatePassword="[Nothing]" DisplayName="HTTP GET Request" EndPoint="[RequestURL]" sap2010:WorkflowViewState.IdRef="HttpClient_1" Method="GET" Password="[in_Password]" Result="[ResultString]" StatusCode="[StatusCode]" TimeoutMS="[in_TimeoutMS]" Username="[in_Username]">
       <ui:HttpClient.Attachments>
         <scg:Dictionary x:TypeArguments="x:String, InArgument(x:String)" />
       </ui:HttpClient.Attachments>
@@ -113,7 +113,12 @@
         <scg:Dictionary x:TypeArguments="x:String, InArgument(x:String)" />
       </ui:HttpClient.UrlSegments>
     </ui:HttpClient>
-    <WriteLine DisplayName="Write line Status Code" sap2010:WorkflowViewState.IdRef="WriteLine_3" Text="[&quot;Status code: &quot; + out_StatusCode.ToString]" />
+    <WriteLine DisplayName="Write line Status Code" sap2010:WorkflowViewState.IdRef="WriteLine_3" Text="[&quot;Status code: &quot; + StatusCode.ToString]" />
+    <If sap2010:Annotation.AnnotationText="A value of 2xx (200, 201, 202, etc.) for StatusCode means Success. Throw error for anything else." Condition="[StatusCode &lt; 200 OR StatusCode &gt;= 300]" DisplayName="If status code not OK" sap2010:WorkflowViewState.IdRef="If_1">
+      <If.Then>
+        <Throw DisplayName="Throw Failed with status code" Exception="[new Exception(&quot;GetAttachmentsList failed with status code &quot; + StatusCode.ToString + &quot; and result: &quot; + ResultString)]" sap2010:WorkflowViewState.IdRef="Throw_1" />
+      </If.Then>
+    </If>
     <Sequence DisplayName="Format output" sap2010:WorkflowViewState.IdRef="Sequence_3">
       <Sequence.Variables>
         <Variable x:TypeArguments="njl:JObject" Name="jObject" />
@@ -131,32 +136,40 @@
         </ui:ForEach.Body>
       </ui:ForEach>
     </Sequence>
-    <sads:DebugSymbol.Symbol>d01EOlxSUEEgUHJvamVjdHNcX015R29Db21wb25lbnRzXFNlcnZpY2VOb3dBUElTbmlwcGV0c1xHZXRBdHRhY2htZW50c0xpc3QueGFtbCABbQFzAQJWA4cBDgIBAVg0WEgCAQJcBWMOAgEpZAVklQECASZlBXMVAgEVdAV0ogECARJ1BYUBEAIBA2EwYdoBAgEsXjFePQIBKmRoZJIBAgEnZdgCZeMCAgElZbAEZcAEAgEjblduWwIBImXKBGXZBAIBIGX3A2WHBAIBHmWMA2WaAwIBHG1ObVICARtl4ANl7wMCARllsgJlvQICARhlkwRlpQQCARZ0aHSfAQIBE3kHecMBAgENegd6hg4CAQp7B4QBFAIBBHmwAXnAAQIBEHmZAXmkAQIBDnokejICAQt7pAF7wwECAQmBAQ2BAZ0CAgEFgQHCAYEB0AECAQeBATiBAbcBAgEG</sads:DebugSymbol.Symbol>
+    <sads:DebugSymbol.Symbol>d01EOlxSUEEgUHJvamVjdHNcX015R29Db21wb25lbnRzXFNlcnZpY2VOb3dBUElTbmlwcGV0c1xHZXRBdHRhY2htZW50c0xpc3QueGFtbCQBbQFzAQJVA4wBDgIBAVc0V0gCAQJcBWMOAgEvZAVklQECASxlBXMVAgEbdAV0ngECARh1BXkKAgESegWKARACAQNhMGHaAQIBMl4xXj0CATBkaGSSAQIBLWXYAmXjAgIBK2WsBGW8BAIBKW5XblsCAShlxgRl1QQCASZl9wNlhwQCASRljANlmgMCASJtTm1SAgEhZeADZe8DAgEfZbICZb0CAgEeZZMEZaEEAgEcdGh0mwECARl1mQF1yAECARN3CXf+AQIBFn4HfsMBAgENfwd/hg4CAQqAAQeJARQCAQR3RnfRAQIBF36wAX7AAQIBEH6ZAX6kAQIBDn8kfzICAQuAAaQBgAHDAQIBCYYBDYYBnQICAQWGAcIBhgHQAQIBB4YBOIYBtwECAQY=</sads:DebugSymbol.Symbol>
   </Sequence>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>
-      <sap2010:ViewStateData Id="Assign_1" sap:VirtualizedContainerService.HintSize="336,87">
+      <sap2010:ViewStateData Id="Assign_1" sap:VirtualizedContainerService.HintSize="464,87">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="WriteLine_1" sap:VirtualizedContainerService.HintSize="336,61" />
-      <sap2010:ViewStateData Id="HttpClient_1" sap:VirtualizedContainerService.HintSize="336,22" />
-      <sap2010:ViewStateData Id="WriteLine_3" sap:VirtualizedContainerService.HintSize="336,61" />
+      <sap2010:ViewStateData Id="WriteLine_1" sap:VirtualizedContainerService.HintSize="464,61" />
+      <sap2010:ViewStateData Id="HttpClient_1" sap:VirtualizedContainerService.HintSize="464,22" />
+      <sap2010:ViewStateData Id="WriteLine_3" sap:VirtualizedContainerService.HintSize="464,61" />
+      <sap2010:ViewStateData Id="Throw_1" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="If_1" sap:VirtualizedContainerService.HintSize="464,250">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
       <sap2010:ViewStateData Id="DeserializeJson`1_1" sap:VirtualizedContainerService.HintSize="314,60" />
       <sap2010:ViewStateData Id="BuildDataTable_1" sap:VirtualizedContainerService.HintSize="314,59" />
       <sap2010:ViewStateData Id="AddDataRow_1" sap:VirtualizedContainerService.HintSize="200,22" />
       <sap2010:ViewStateData Id="ForEach`1_1" sap:VirtualizedContainerService.HintSize="314,194" />
-      <sap2010:ViewStateData Id="Sequence_3" sap:VirtualizedContainerService.HintSize="336,517">
+      <sap2010:ViewStateData Id="Sequence_3" sap:VirtualizedContainerService.HintSize="464,517">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="358,1164">
+      <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="486,1424">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -164,7 +177,7 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="GetAttachments_1" sap:VirtualizedContainerService.HintSize="398,1244" />
+      <sap2010:ViewStateData Id="GetAttachments_1" sap:VirtualizedContainerService.HintSize="526,1504" />
     </sap2010:ViewStateManager>
   </sap2010:WorkflowViewState.ViewStateManager>
 </Activity>

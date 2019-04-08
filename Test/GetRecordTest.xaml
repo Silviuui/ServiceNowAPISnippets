@@ -72,13 +72,12 @@
       <Variable x:TypeArguments="x:Int32" Name="StatusCode" />
     </Sequence.Variables>
     <Sequence DisplayName="Get ServiceNow config values" sap2010:WorkflowViewState.IdRef="Sequence_3">
-      <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke GetConfigValues workflow" UnSafe="False" WorkflowFileName="Test\_GetConfigValues.xaml">
+      <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke GetConfigValues workflow" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_3" UnSafe="False" WorkflowFileName="Test\_GetConfigValues.xaml">
         <ui:InvokeWorkflowFile.Arguments>
           <OutArgument x:TypeArguments="x:String" x:Key="out_ServiceNowUrl">[ServiceNowUrl]</OutArgument>
           <OutArgument x:TypeArguments="x:String" x:Key="out_Username">[Username]</OutArgument>
           <OutArgument x:TypeArguments="x:String" x:Key="out_Password">[Password]</OutArgument>
         </ui:InvokeWorkflowFile.Arguments>
-        <sap2010:WorkflowViewState.IdRef>InvokeWorkflowFile_3</sap2010:WorkflowViewState.IdRef>
       </ui:InvokeWorkflowFile>
     </Sequence>
     <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke GetTableItem workflow" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_1" UnSafe="False" WorkflowFileName="GetRecord.xaml">
@@ -89,7 +88,6 @@
         <InArgument x:TypeArguments="x:String" x:Key="in_TableName">sc_request</InArgument>
         <InArgument x:TypeArguments="x:String" x:Key="in_RecordID">1082efc2db3f230084417dda8c961942</InArgument>
         <OutArgument x:TypeArguments="njl:JToken" x:Key="out_Result">[result]</OutArgument>
-        <OutArgument x:TypeArguments="x:Int32" x:Key="out_StatusCode">[StatusCode]</OutArgument>
       </ui:InvokeWorkflowFile.Arguments>
     </ui:InvokeWorkflowFile>
     <ui:ForEach x:TypeArguments="njl:JToken" DisplayName="For Each" sap2010:WorkflowViewState.IdRef="ForEach`1_1" Values="[result]">
@@ -104,7 +102,7 @@
         </ActivityAction>
       </ui:ForEach.Body>
     </ui:ForEach>
-    <sads:DebugSymbol.Symbol>d01EOlxSUEEgUHJvamVjdHNcX015R29Db21wb25lbnRzXFNlcnZpY2VOb3dBUElTbmlwcGV0c1xUZXN0XEdldFJlY29yZFRlc3QueGFtbBVCA2wOAgEBSgVTEAIBFVQFXh0CAQdfBWoSAgECSwdSHwIBFlZHVlYCARNaRFpkAgESW0ZbTgIBEFdEV04CAQ5cR1xTAgEMVLkBVMkBAgELWUVZTwIBClhEWE4CAQhfkgFfnAECAQZlC2cWAgEDT0hPUgIBHE5ITlICARpNTU1cAgEYS4cBS6MBAgEXZg1meAIBBGZkZnUCAQU=</sads:DebugSymbol.Symbol>
+    <sads:DebugSymbol.Symbol>d01EOlxSUEEgUHJvamVjdHNcX015R29Db21wb25lbnRzXFNlcnZpY2VOb3dBUElTbmlwcGV0c1xUZXN0XEdldFJlY29yZFRlc3QueGFtbBRCA2oOAgEBSgVSEAIBE1MFXB0CAQddBWgSAgECSwdRHwIBFFVHVVYCARFZRFlkAgEQWkZaTgIBDlZEVk4CAQxTuQFTyQECAQtYRVhPAgEKV0RXTgIBCF2SAV2cAQIBBmMLZRYCAQNPSE9SAgEaTkhOUgIBGE1NTVwCARZLvgFL2gECARVkDWR4AgEEZGRkdQIBBQ==</sads:DebugSymbol.Symbol>
   </Sequence>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>

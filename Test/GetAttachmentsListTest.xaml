@@ -54,6 +54,12 @@
       <AssemblyReference>System.Xaml</AssemblyReference>
       <AssemblyReference>UiPath.System.Activities</AssemblyReference>
       <AssemblyReference>UiPath.UiAutomation.Activities</AssemblyReference>
+      <AssemblyReference>System.ServiceModel</AssemblyReference>
+      <AssemblyReference>System.ValueTuple</AssemblyReference>
+      <AssemblyReference>UiPath.Mail</AssemblyReference>
+      <AssemblyReference>UiPath.Excel</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.Composition</AssemblyReference>
+      <AssemblyReference>System.Runtime.WindowsRuntime</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
   <Sequence sap2010:Annotation.AnnotationText="Before running this unit test, please make sure you set the correct values for the ServiceNow configuration (URL, Username and Password) in the Config file and for the invoked workflow file." DisplayName="GetAttachmentsListTest" sap2010:WorkflowViewState.IdRef="Sequence_1">
@@ -66,13 +72,12 @@
       <Variable x:TypeArguments="x:Int32" Name="StatusCode" />
     </Sequence.Variables>
     <Sequence DisplayName="Get ServiceNow config values" sap2010:WorkflowViewState.IdRef="Sequence_2">
-      <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke GetConfigValues workflow" UnSafe="False" WorkflowFileName="Test\_GetConfigValues.xaml">
+      <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke GetConfigValues workflow" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_3" UnSafe="False" WorkflowFileName="Test\_GetConfigValues.xaml">
         <ui:InvokeWorkflowFile.Arguments>
           <OutArgument x:TypeArguments="x:String" x:Key="out_ServiceNowUrl">[ServiceNowUrl]</OutArgument>
           <OutArgument x:TypeArguments="x:String" x:Key="out_Username">[Username]</OutArgument>
           <OutArgument x:TypeArguments="x:String" x:Key="out_Password">[Password]</OutArgument>
         </ui:InvokeWorkflowFile.Arguments>
-        <sap2010:WorkflowViewState.IdRef>InvokeWorkflowFile_3</sap2010:WorkflowViewState.IdRef>
       </ui:InvokeWorkflowFile>
     </Sequence>
     <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke GetTableItem workflow" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_1" UnSafe="False" WorkflowFileName="GetAttachmentsList.xaml">
@@ -83,13 +88,12 @@
         <InArgument x:TypeArguments="x:String" x:Key="in_InstanceURL">[ServiceNowUrl]</InArgument>
         <InArgument x:TypeArguments="x:String" x:Key="in_Username">[Username]</InArgument>
         <InArgument x:TypeArguments="x:String" x:Key="in_Password">[Password]</InArgument>
-        <OutArgument x:TypeArguments="x:Int32" x:Key="out_StatusCode">[StatusCode]</OutArgument>
         <OutArgument x:TypeArguments="sd:DataTable" x:Key="out_Result">[result]</OutArgument>
       </ui:InvokeWorkflowFile.Arguments>
     </ui:InvokeWorkflowFile>
     <ui:OutputDataTable DataTable="[result]" DisplayName="Output Data Table" sap2010:WorkflowViewState.IdRef="OutputDataTable_1" Text="[dtText]" />
     <WriteLine DisplayName="Write Line" sap2010:WorkflowViewState.IdRef="WriteLine_1" Text="[dtText]" />
-    <sads:DebugSymbol.Symbol>d1ZEOlxSUEEgUHJvamVjdHNcX015R29Db21wb25lbnRzXFNlcnZpY2VOb3dBUElTbmlwcGV0c1xUZXN0XEdldEF0dGFjaG1lbnRzTGlzdFRlc3QueGFtbBY7A10OAgEBRAVNEAIBGU4FWR0CAQpaBVqUAQIBBVsFW2kCAQJFB0wfAgEaUURRZAIBGFNHU1YCARZXSFdQAgEUUkBSQwIBE1REVE4CARFWR1ZTAgEPTrkBTtIBAgEOUEVQUAIBDVVEVU4CAQtahwFakQECAQhaI1otAgEGW1xbZgIBA0lISVICASBISEhSAgEeR01HXAIBHEWHAUWjAQIBGw==</sads:DebugSymbol.Symbol>
+    <sads:DebugSymbol.Symbol>d1ZEOlxSUEEgUHJvamVjdHNcX015R29Db21wb25lbnRzXFNlcnZpY2VOb3dBUElTbmlwcGV0c1xUZXN0XEdldEF0dGFjaG1lbnRzTGlzdFRlc3QueGFtbBVBA2EOAgEBSgVSEAIBF1MFXR0CAQpeBV6UAQIBBV8FX2kCAQJLB1EfAgEYVkRWZAIBFlhHWFYCARRbSFtQAgESV0BXQwIBEVlEWU4CAQ9TuQFT0gECAQ5VRVVQAgENWkRaTgIBC16HAV6RAQIBCF4jXi0CAQZfXF9mAgEDT0hPUgIBHk5ITlICARxNTU1cAgEaS74BS9oBAgEZ</sads:DebugSymbol.Symbol>
   </Sequence>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>

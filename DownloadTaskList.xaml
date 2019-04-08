@@ -16,7 +16,6 @@
     <x:Property sap2010:Annotation.AnnotationText="in_Password for the basic authentication." sap2010:WorkflowViewState.IdRef="DynamicActivityProperty_3" Name="in_Password" Type="InArgument(x:String)" />
     <x:Property sap2010:Annotation.AnnotationText="Specify the file format for the downloaded report.&#xA;Supported values: &#xA; - XLSX&#xA; - XLS (or EXCEL)&#xA; - PDF&#xA; - CSV" sap2010:WorkflowViewState.IdRef="DynamicActivityProperty_5" Name="in_OutputFileFormat" Type="InArgument(x:String)" />
     <x:Property sap2010:Annotation.AnnotationText="Full or relative file path to save the downloaded report." sap2010:WorkflowViewState.IdRef="DynamicActivityProperty_6" Name="in_OutputFilePath" Type="InArgument(x:String)" />
-    <x:Property Name="out_StatusCode" Type="OutArgument(x:Int32)" />
     <x:Property sap2010:Annotation.AnnotationText="List of in_Query parameters.&#xA;You can easily find this string by applying all filters in Service Now web interface and then right click on last condition -&gt; Copy in_Query." sap2010:WorkflowViewState.IdRef="DynamicActivityProperty_4" Name="in_Query" Type="InArgument(x:String)" />
     <x:Property sap2010:Annotation.AnnotationText="The maximum time, in milliseconds, to wait for the HTTP request to complete." Name="in_TimeoutMS" Type="InArgument(x:Int32)" />
   </x:Members>
@@ -75,13 +74,16 @@
       <AssemblyReference>UiPath.Mail</AssemblyReference>
       <AssemblyReference>UiPath.Excel</AssemblyReference>
       <AssemblyReference>System.ValueTuple</AssemblyReference>
+      <AssemblyReference>System.Runtime.WindowsRuntime</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence sap2010:Annotation.AnnotationText="Download the tasks filtered by specified criteria in one of the supported output formats. &#xA;&#xA;The request is authenticated using HTTP Basic Authentication (secure only when secure HTTP is used).&#xA;&#xA;Parameters array can be used to specify different filtering criteria.&#xA;&#xA;The output file can be in different formats, such as XLSX, XLS, PDF, CSV. Other formats are supported by Service Now api, but not implemented or tested with this workflow.&#xD;&#xA;&#xD;&#xA;A value of 2xx (200, 201, 202, etc.) for out_StatusCode means Success. " DisplayName="Download Tasks List" sap2010:WorkflowViewState.IdRef="Sequence_1">
+  <Sequence sap2010:Annotation.AnnotationText="Download the tasks filtered by specified criteria in one of the supported output formats. &#xA;&#xA;The request is authenticated using HTTP Basic Authentication (secure only when secure HTTP is used).&#xA;&#xA;Parameters array can be used to specify different filtering criteria.&#xA;&#xA;The output file can be in different formats, such as XLSX, XLS, PDF, CSV. Other formats are supported by Service Now api, but not implemented or tested with this workflow.&#xA;&#xA;A value of 2xx (200, 201, 202, etc.) for out_StatusCode means Success. " DisplayName="Download Tasks List" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <Sequence.Variables>
       <Variable x:TypeArguments="x:String" Default="sc_task_list.do" Modifiers="ReadOnly" Name="TaskListEndpoint" />
       <Variable x:TypeArguments="x:String" Name="RequestURL" />
       <Variable x:TypeArguments="x:String" Default="sysparm_in_Query" Modifiers="ReadOnly" Name="in_QueryParameter" />
+      <Variable x:TypeArguments="x:String" Name="Result" />
+      <Variable x:TypeArguments="x:Int32" Name="StatusCode" />
     </Sequence.Variables>
     <Assign sap2010:Annotation.AnnotationText="Format must be specified in uppercase, like PDF. &quot;Pdf&quot; or &quot;pdf&quot; is not working." DisplayName="Assign in_OutputFileFormat to uppercase" sap2010:WorkflowViewState.IdRef="Assign_1">
       <Assign.To>
@@ -100,7 +102,7 @@
       </Assign.Value>
     </Assign>
     <WriteLine DisplayName="Write line Request URL" sap2010:WorkflowViewState.IdRef="WriteLine_1" Text="[&quot;Request URL: &quot; + RequestURL]" />
-    <ui:HttpClient Body="{x:Null}" ConsumerKey="{x:Null}" ConsumerSecret="{x:Null}" ContinueOnError="{x:Null}" OAuth1Token="{x:Null}" OAuth1TokenSecret="{x:Null}" OAuth2Token="{x:Null}" ResponseHeaders="{x:Null}" Result="{x:Null}" AcceptFormat="ANY" BodyFormat="application/xml" ClientCertificate="[Nothing]" ClientCertificatePassword="[Nothing]" DisplayName="HTTP GET Request" EndPoint="[RequestURL]" sap2010:WorkflowViewState.IdRef="HttpClient_1" Method="GET" Password="[in_Password]" ResourcePath="[in_OutputFilePath]" StatusCode="[out_StatusCode]" TimeoutMS="[in_TimeoutMS]" Username="[in_Username]">
+    <ui:HttpClient Body="{x:Null}" ConsumerKey="{x:Null}" ConsumerSecret="{x:Null}" ContinueOnError="{x:Null}" OAuth1Token="{x:Null}" OAuth1TokenSecret="{x:Null}" OAuth2Token="{x:Null}" ResponseHeaders="{x:Null}" AcceptFormat="ANY" BodyFormat="application/xml" ClientCertificate="[Nothing]" ClientCertificatePassword="[Nothing]" DisplayName="HTTP GET Request" EndPoint="[RequestURL]" sap2010:WorkflowViewState.IdRef="HttpClient_1" Method="GET" Password="[in_Password]" ResourcePath="[in_OutputFilePath]" Result="[Result]" StatusCode="[StatusCode]" TimeoutMS="[in_TimeoutMS]" Username="[in_Username]">
       <ui:HttpClient.Attachments>
         <scg:Dictionary x:TypeArguments="x:String, InArgument(x:String)" />
       </ui:HttpClient.Attachments>
@@ -114,8 +116,13 @@
         <scg:Dictionary x:TypeArguments="x:String, InArgument(x:String)" />
       </ui:HttpClient.UrlSegments>
     </ui:HttpClient>
-    <WriteLine DisplayName="Write line Status Code" sap2010:WorkflowViewState.IdRef="WriteLine_2" Text="[&quot;Status code: &quot; + out_StatusCode.ToString]" />
-    <sads:DebugSymbol.Symbol>d0NDOlxVc2Vyc1xTaWx2aXVcRGVza3RvcFxTZXJ2aWNlTm93SW50ZWdyYXRpb25cRG93bmxvYWRUYXNrTGlzdC54YW1sFwFoAW4BAlADdw4CAQFSNFJFAgEDVDRUQwIBAlYFXQ4CASJeBWUOAgEZZgVmlQECARZnBXQVAgEHdQV1ngECAQRbMFtKAgElWDFYQwIBI2MwY6IBAgEcYDFgPQIBGmZoZpIBAgEXZ9ACZ9sCAgEVZ6kEZ7YEAgETZ/IDZ4QEAgERZ8AEZ8wEAgEPZ4QDZ5IDAgENZ9gDZ+QDAgELZ6oCZ7UCAgEKZ5AEZ54EAgEIdWh1mwECAQU=</sads:DebugSymbol.Symbol>
+    <WriteLine DisplayName="Write line Status Code" sap2010:WorkflowViewState.IdRef="WriteLine_2" Text="[&quot;Status code: &quot; + StatusCode.ToString]" />
+    <If sap2010:Annotation.AnnotationText="A value of 2xx (200, 201, 202, etc.) for StatusCode means Success. Throw error for anything else." Condition="[StatusCode &lt; 200 OR StatusCode &gt;= 300]" DisplayName="If status code not OK" sap2010:WorkflowViewState.IdRef="If_1">
+      <If.Then>
+        <Throw DisplayName="Throw Failed with status code" Exception="[new Exception(&quot;DownloadTaskList failed with status code &quot; + StatusCode.ToString + &quot; and result: &quot; + Result)]" sap2010:WorkflowViewState.IdRef="Throw_1" />
+      </If.Then>
+    </If>
+    <sads:DebugSymbol.Symbol>d0tEOlxSUEEgUHJvamVjdHNcX015R29Db21wb25lbnRzXFNlcnZpY2VOb3dBUElTbmlwcGV0c1xEb3dubG9hZFRhc2tMaXN0LnhhbWwcAWsBcQECUAN+DgIBAVI0UkUCAQNUNFRGAgECWAVfDgIBKmAFZw4CASFoBWiVAQIBHmkFdhUCAQ13BXeeAQIBCngFfAoCAQRdMF1NAgEtWjFaRgIBK2UwZa4BAgEkYjFiPQIBImhoaJIBAgEfab4CackCAgEdaa8Eab8EAgEbaeMDafgDAgEZackEadgEAgEXaYAEaYoEAgEVafICaYADAgETacYDadUDAgERaZgCaaMCAgEQaZYEaaQEAgEOd2h3mwECAQt4mQF4yAECAQV6CXr2AQIBCHpGeskBAgEJ</sads:DebugSymbol.Symbol>
   </Sequence>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>
@@ -161,24 +168,32 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="Assign_1" sap:VirtualizedContainerService.HintSize="242,117">
+      <sap2010:ViewStateData Id="Assign_1" sap:VirtualizedContainerService.HintSize="464,117">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="Assign_2" sap:VirtualizedContainerService.HintSize="242,87">
+      <sap2010:ViewStateData Id="Assign_2" sap:VirtualizedContainerService.HintSize="464,87">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="WriteLine_1" sap:VirtualizedContainerService.HintSize="242,61" />
-      <sap2010:ViewStateData Id="HttpClient_1" sap:VirtualizedContainerService.HintSize="242,22" />
-      <sap2010:ViewStateData Id="WriteLine_2" sap:VirtualizedContainerService.HintSize="242,61" />
-      <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="264,929">
+      <sap2010:ViewStateData Id="WriteLine_1" sap:VirtualizedContainerService.HintSize="464,61" />
+      <sap2010:ViewStateData Id="HttpClient_1" sap:VirtualizedContainerService.HintSize="464,22" />
+      <sap2010:ViewStateData Id="WriteLine_2" sap:VirtualizedContainerService.HintSize="464,61" />
+      <sap2010:ViewStateData Id="Throw_1" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="If_1" sap:VirtualizedContainerService.HintSize="464,250">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="486,1129">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -186,7 +201,7 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="DownloadTaskList_1" sap:VirtualizedContainerService.HintSize="304,1009" />
+      <sap2010:ViewStateData Id="DownloadTaskList_1" sap:VirtualizedContainerService.HintSize="526,1209" />
     </sap2010:ViewStateManager>
   </sap2010:WorkflowViewState.ViewStateManager>
 </Activity>

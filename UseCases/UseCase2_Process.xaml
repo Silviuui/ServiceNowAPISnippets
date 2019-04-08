@@ -78,6 +78,7 @@
       <Variable x:TypeArguments="njl:JArray" Name="TasksList" />
       <Variable x:TypeArguments="x:String" Name="TaskListQuery" />
     </Sequence.Variables>
+    <ui:Comment DisplayName="Important note" Text="This example use case requires a specific configuration for the ServiceNow instance. It does not work for the default developer instance." sap2010:WorkflowViewState.IdRef="Comment_1" />
     <Sequence DisplayName="Get ServiceNow config values" sap2010:WorkflowViewState.IdRef="Sequence_6">
       <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke GetConfigValues workflow" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_10" UnSafe="False" WorkflowFileName="Test\_GetConfigValues.xaml">
         <ui:InvokeWorkflowFile.Arguments>
@@ -100,7 +101,6 @@
         <InArgument x:TypeArguments="x:String" x:Key="in_InstanceURL">[ServiceNowUrl]</InArgument>
         <InArgument x:TypeArguments="x:String" x:Key="in_Username">[Username]</InArgument>
         <InArgument x:TypeArguments="x:String" x:Key="in_Password">[Password]</InArgument>
-        <OutArgument x:TypeArguments="x:Int32" x:Key="out_StatusCode">[statusCode]</OutArgument>
         <InArgument x:TypeArguments="x:String" x:Key="in_Query">[TaskListQuery]</InArgument>
         <InArgument x:TypeArguments="x:String" x:Key="in_TableName">sc_task</InArgument>
         <OutArgument x:TypeArguments="njl:JArray" x:Key="out_Result">[TasksList]</OutArgument>
@@ -138,7 +138,6 @@
                 <InArgument x:TypeArguments="x:String" x:Key="in_TableName">sc_req_item</InArgument>
                 <InArgument x:TypeArguments="x:String" x:Key="in_RecordID">[Task("request_item").ToString]</InArgument>
                 <OutArgument x:TypeArguments="njl:JToken" x:Key="out_Result">[RequestItemDetails]</OutArgument>
-                <OutArgument x:TypeArguments="x:Int32" x:Key="out_StatusCode">[statusCode]</OutArgument>
               </ui:InvokeWorkflowFile.Arguments>
             </ui:InvokeWorkflowFile>
             <Assign DisplayName="Assign Status" sap2010:WorkflowViewState.IdRef="Assign_6">
@@ -175,7 +174,6 @@
                       <InArgument x:TypeArguments="x:String" x:Key="in_InstanceURL">[ServiceNowUrl]</InArgument>
                       <InArgument x:TypeArguments="x:String" x:Key="in_Username">[Username]</InArgument>
                       <InArgument x:TypeArguments="x:String" x:Key="in_Password">[Password]</InArgument>
-                      <OutArgument x:TypeArguments="x:Int32" x:Key="out_StatusCode" />
                       <OutArgument x:TypeArguments="sd:DataTable" x:Key="out_Result">[Attachments]</OutArgument>
                     </ui:InvokeWorkflowFile.Arguments>
                   </ui:InvokeWorkflowFile>
@@ -191,7 +189,6 @@
                             <InArgument x:TypeArguments="x:String" x:Key="in_Username">[Username]</InArgument>
                             <InArgument x:TypeArguments="x:String" x:Key="in_Password">[Password]</InArgument>
                             <InArgument x:TypeArguments="x:String" x:Key="in_AttachementID">[row("sys_id").ToString]</InArgument>
-                            <OutArgument x:TypeArguments="x:Int32" x:Key="out_StatusCode" />
                             <InArgument x:TypeArguments="x:String" x:Key="in_FilePath">["Output\" + row("file_name").ToString]</InArgument>
                           </ui:InvokeWorkflowFile.Arguments>
                         </ui:InvokeWorkflowFile>
@@ -210,17 +207,17 @@
                 <InArgument x:TypeArguments="x:String" x:Key="in_TableName">sc_task</InArgument>
                 <InArgument x:TypeArguments="x:String" x:Key="in_RecordID">[Task("sys_id").ToString]</InArgument>
                 <InArgument x:TypeArguments="sd:DataTable" x:Key="in_UpdateData">[UpdatedData]</InArgument>
-                <OutArgument x:TypeArguments="x:Int32" x:Key="out_StatusCode">[statusCode]</OutArgument>
               </ui:InvokeWorkflowFile.Arguments>
             </ui:InvokeWorkflowFile>
           </Sequence>
         </ActivityAction>
       </ui:ForEach.Body>
     </ui:ForEach>
-    <sads:DebugSymbol.Symbol>d1REOlxSUEEgUHJvamVjdHNcX015R29Db21wb25lbnRzXFNlcnZpY2VOb3dBUElTbmlwcGV0c1xVc2VDYXNlc1xVc2VDYXNlMl9Qcm9jZXNzLnhhbWxRSAPdAQ4CAQFRBVkQAgFsWgVhDgIBaGIFbR0CAVhuBdsBEgIBAlIHWB8CAW1fMF87AgFrXDFcQAIBaWRHZFYCAWZqRmpRAgFka0prqQECAWNlRGVOAgFhaEFoUAIBX2dHZ1MCAV1igARikQQCAVxpRWlMAgFbZkRmTgIBWW6YAW6lAQIBV3QL2AEWAgEDVkhWUgIBc1VIVVICAXFUTVRcAgFvUr8BUtsBAgFufA18oAICAVV9DYQBFgIBUYUBDY8BJQIBQ5ABDZcBFgIBP5gBDZgB4gECAT2ZAQ3LARICARXMAQ3MAf0MAgESzQEN1wElAgEEfIABfJ0CAgFWggE/ggFwAgFUf0B/TgIBUocBT4cBXgIBT4sBTIsBawIBTowBTowBYgIBTIgBTIgBVgIBSo0BT40BWwIBSIUBlwOFAacDAgFHigFNigFYAgFGiQFMiQFWAgFElQE/lQFlAgFCkgFAkgFIAgFAmAGJAZgB3wECAT6ZARuZATMCARabARGjASkCATKmARHJARwCARfMAZABzAGfAQIBE9QBUtQBXwIBEM8BT88BXgIBDtMBTNMBZQIBDdABTNABVgIBC9UBT9UBWwIBCc0BwQHNAdQBAgEI0gFN0gFUAgEH0QFM0QFWAgEFoAFVoAFkAgE7nQFbnQFpAgE5oQFVoQF0AgE4nwFQnwFaAgE2mwHWAZsBgwICATWeAVCeAVoCATOqARO1ASsCASW2ARPIASMCARitAVKtAXECATGvAVWvAWQCAS+zAVazAWMCAS2uAU6uAVACASywAVKwAVwCASqqAc0BqgHmAQIBKawBU6wBXgIBKLEBUrEBXAIBJrYBRLYBUwIBI7wBGcUBMQIBGcEBXcEBdQIBIr4BW74BagIBIMMBWMMBfwIBH78BWL8BYgIBHbwB0wG8AewBAgEcwAFYwAFiAgEa</sads:DebugSymbol.Symbol>
+    <sads:DebugSymbol.Symbol>d1REOlxSUEEgUHJvamVjdHNcX015R29Db21wb25lbnRzXFNlcnZpY2VOb3dBUElTbmlwcGV0c1xVc2VDYXNlc1xVc2VDYXNlMl9Qcm9jZXNzLnhhbWxPSAPZAQ4CAQFRBVHtAQIBb1IFWhACAWZbBWIOAgFiYwVtHQIBVG4F1wESAgECUwdZHwIBZ2AwYDsCAWVdMV1AAgFjZUdlVgIBYGpGalECAV5rSmupAQIBXWZEZk4CAVtoQWhQAgFZY4AEY5EEAgFYaUVpTAIBV2dEZ04CAVVumAFupQECAVN0C9QBFgIBA1dIV1ICAW1WSFZSAgFrVU1VXAIBaVO/AVPbAQIBaHwNfKACAgFRfQ2EARYCAU2FAQ2OASUCAUGPAQ2WARYCAT2XAQ2XAeIBAgE7mAENyAESAgETyQENyQH9DAIBEMoBDdMBJQIBBHyAAXydAgIBUoIBP4IBcAIBUH9Af04CAU6HAU+HAV4CAUuLAUyLAWsCAUqMAU6MAWICAUiIAUyIAVYCAUaFAZcDhQGnAwIBRYoBTYoBWAIBRIkBTIkBVgIBQpQBP5QBZQIBQJEBQJEBSAIBPpcBiQGXAd8BAgE8mAEbmAEzAgEUmgERogEpAgEwpQERxgEcAgEVyQGQAckBnwECARHRAVLRAV8CAQ7MAU/MAV4CAQzQAUzQAWUCAQvNAUzNAVYCAQnKAcEBygHUAQIBCM8BTc8BVAIBB84BTM4BVgIBBZ8BVZ8BZAIBOZwBW5wBaQIBN6ABVaABdAIBNp4BUJ4BWgIBNJoB1gGaAYMCAgEznQFQnQFaAgExqQETswErAgEjtAETxQEjAgEWrAFSrAFxAgEvrgFVrgFkAgEtsQFWsQFjAgErrQFOrQFQAgEqrwFSrwFcAgEoqQHNAakB5gECASerAVOrAV4CASawAVKwAVwCASS0AUS0AVMCASG6ARnCATECARe/AV2/AXUCASC8AVu8AWoCAR7AAVjAAX8CAR29AVi9AWICARu6AdMBugHsAQIBGr4BWL4BYgIBGA==</sads:DebugSymbol.Symbol>
   </Sequence>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>
+      <sap2010:ViewStateData Id="Comment_1" sap:VirtualizedContainerService.HintSize="743,112" />
       <sap2010:ViewStateData Id="InvokeWorkflowFile_10" sap:VirtualizedContainerService.HintSize="314,87" />
       <sap2010:ViewStateData Id="Sequence_6" sap:VirtualizedContainerService.HintSize="743,211">
         <sap:WorkflowViewStateService.ViewState>
@@ -284,7 +281,7 @@
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
       <sap2010:ViewStateData Id="ForEach`1_2" sap:VirtualizedContainerService.HintSize="743,1821" />
-      <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="765,2819">
+      <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="765,2971">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -292,7 +289,7 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="UseCase2_Process_1" sap:VirtualizedContainerService.HintSize="805,2899" />
+      <sap2010:ViewStateData Id="UseCase2_Process_1" sap:VirtualizedContainerService.HintSize="805,3051" />
     </sap2010:ViewStateManager>
   </sap2010:WorkflowViewState.ViewStateManager>
 </Activity>

@@ -64,7 +64,6 @@
   </TextExpression.ReferencesForImplementation>
   <Sequence sap2010:Annotation.AnnotationText="Exports as XLSX file the list of tasks found in the report according with the filter query.&#xA;&#xA;To find out the value needed by the Query parameter of the DownloadTaskList workflow, you can filter the table as required in the Service Now website and then right click on the last filter and select &quot;Copy query&quot;." DisplayName="TestDownloadTaskList" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <Sequence.Variables>
-      <Variable x:TypeArguments="x:Int32" Name="statusCode" />
       <Variable x:TypeArguments="x:String" Name="ExportFilePath" />
       <Variable x:TypeArguments="sd:DataTable" Name="MyTasks" />
       <Variable x:TypeArguments="x:String" Name="ServiceNowUrl" />
@@ -80,13 +79,12 @@
       </Assign.Value>
     </Assign>
     <Sequence DisplayName="Get ServiceNow config values" sap2010:WorkflowViewState.IdRef="Sequence_3">
-      <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke GetConfigValues workflow" UnSafe="False" WorkflowFileName="Test\_GetConfigValues.xaml">
+      <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke GetConfigValues workflow" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_3" UnSafe="False" WorkflowFileName="Test\_GetConfigValues.xaml">
         <ui:InvokeWorkflowFile.Arguments>
           <OutArgument x:TypeArguments="x:String" x:Key="out_ServiceNowUrl">[ServiceNowUrl]</OutArgument>
           <OutArgument x:TypeArguments="x:String" x:Key="out_Username">[Username]</OutArgument>
           <OutArgument x:TypeArguments="x:String" x:Key="out_Password">[Password]</OutArgument>
         </ui:InvokeWorkflowFile.Arguments>
-        <sap2010:WorkflowViewState.IdRef>InvokeWorkflowFile_3</sap2010:WorkflowViewState.IdRef>
       </ui:InvokeWorkflowFile>
     </Sequence>
     <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke DownloadTaskList workflow" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_1" UnSafe="False" WorkflowFileName="DownloadTaskList.xaml">
@@ -96,15 +94,9 @@
         <InArgument x:TypeArguments="x:String" x:Key="in_Password">[Password]</InArgument>
         <InArgument x:TypeArguments="x:String" x:Key="in_OutputFileFormat">XLSX</InArgument>
         <InArgument x:TypeArguments="x:String" x:Key="in_OutputFilePath">[ExportFilePath]</InArgument>
-        <OutArgument x:TypeArguments="x:Int32" x:Key="out_StatusCode">[statusCode]</OutArgument>
         <InArgument x:TypeArguments="x:String" x:Key="in_Query">u_accessLIKEit^ORu_accessLIKEGSD-DXC^assignment_groupDYNAMICd6435e965f510100a9ad2572f2b47744^request_item.cat_item=b141109e0fa3fa007bd95c3be1050e39^state=1</InArgument>
       </ui:InvokeWorkflowFile.Arguments>
     </ui:InvokeWorkflowFile>
-    <If sap2010:Annotation.AnnotationText="A value of 2xx (200, 201, 202, etc.) for StatusCode means Success. " Condition="[statusCode &lt; 200 OR statusCode &gt;= 300]" DisplayName="If status code not good" sap2010:WorkflowViewState.IdRef="If_1">
-      <If.Then>
-        <Throw DisplayName="Throw Failed with status code" Exception="[new Exception(&quot;DownloadTaskList failed with status code &quot; + statusCode.ToString)]" sap2010:WorkflowViewState.IdRef="Throw_1" />
-      </If.Then>
-    </If>
     <ui:ExcelApplicationScope Password="{x:Null}" AutoSave="False" DisplayName="Excel application scope" sap2010:WorkflowViewState.IdRef="ExcelApplicationScope_1" WorkbookPath="[ExportFilePath]">
       <ui:ExcelApplicationScope.Body>
         <ActivityAction x:TypeArguments="ui:WorkbookApplication">
@@ -131,13 +123,13 @@
         </ActivityAction>
       </ui:ForEachRow.Body>
     </ui:ForEachRow>
-    <sads:DebugSymbol.Symbol>d11EOlxSUEEgUHJvamVjdHNcX015R29Db21wb25lbnRzXFNlcnZpY2VOb3dBUElTbmlwcGV0c1xVc2VDYXNlc1xVc2VDYXNlMV9Eb3dubG9hZFRhc2tMaXN0LnhhbWwhQQOHAQ4CAQFKBVEOAgEsUgVbEAIBI1wFZh0CARVnBWsKAgEPbAV7IAIBB3wFhQEVAgECTzBPOgIBL0wxTEECAS1TB1ofAgEkXkdeVgIBIWJKYloCAR9hTGFQAgEeX0RfTgIBHGRBZNwBAgEbY0djUwIBGVy9AVzUAQIBGGBEYE4CARZne2eqAQIBEGkJadEBAgETbLEBbMMBAgENcgt4HwIBCHw2fEECAQWCAQuCAbIBAgEDV0hXUgIBKlZIVlICAShVTVVcAgEmU4cBU6MBAgElaUZppAECARRyOnJFAgELdRF1QAIBCnKcAXKkAQIBCYIBhQGCAa8BAgEE</sads:DebugSymbol.Symbol>
+    <sads:DebugSymbol.Symbol>d11EOlxSUEEgUHJvamVjdHNcX015R29Db21wb25lbnRzXFNlcnZpY2VOb3dBUElTbmlwcGV0c1xVc2VDYXNlc1xVc2VDYXNlMV9Eb3dubG9hZFRhc2tMaXN0LnhhbWwcQQN/DgIBAUkFUA4CASRRBVkQAgEbWgVjHQIBD2QFcyACAQd0BX0VAgECTjBOOgIBJ0sxS0ECASVSB1gfAgEcXEdcVgIBGWBKYFoCARdfTF9QAgEWXURdTgIBFGFBYdwBAgETWr0BWtQBAgESXkReTgIBEGSxAWTDAQIBDWoLcB8CAQh0NnRBAgEFegt6sgECAQNWSFZSAgEiVUhVUgIBIFRNVFwCAR5SvgFS2gECAR1qOmpFAgELbRFtQAIBCmqcAWqkAQIBCXqFAXqvAQIBBA==</sads:DebugSymbol.Symbol>
   </Sequence>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>
-      <sap2010:ViewStateData Id="Assign_1" sap:VirtualizedContainerService.HintSize="464,60" />
+      <sap2010:ViewStateData Id="Assign_1" sap:VirtualizedContainerService.HintSize="414,60" />
       <sap2010:ViewStateData Id="InvokeWorkflowFile_3" sap:VirtualizedContainerService.HintSize="314,87" />
-      <sap2010:ViewStateData Id="Sequence_3" sap:VirtualizedContainerService.HintSize="464,211">
+      <sap2010:ViewStateData Id="Sequence_3" sap:VirtualizedContainerService.HintSize="414,211">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -145,20 +137,12 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="InvokeWorkflowFile_1" sap:VirtualizedContainerService.HintSize="464,87" />
-      <sap2010:ViewStateData Id="Throw_1" sap:VirtualizedContainerService.HintSize="200,22" />
-      <sap2010:ViewStateData Id="If_1" sap:VirtualizedContainerService.HintSize="464,235">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="InvokeWorkflowFile_1" sap:VirtualizedContainerService.HintSize="414,87" />
       <sap2010:ViewStateData Id="ExcelReadRange_1" sap:VirtualizedContainerService.HintSize="314,59" />
-      <sap2010:ViewStateData Id="ExcelApplicationScope_1" sap:VirtualizedContainerService.HintSize="464,168" />
+      <sap2010:ViewStateData Id="ExcelApplicationScope_1" sap:VirtualizedContainerService.HintSize="414,168" />
       <sap2010:ViewStateData Id="LogMessage_1" sap:VirtualizedContainerService.HintSize="314,91" />
-      <sap2010:ViewStateData Id="ForEachRow_1" sap:VirtualizedContainerService.HintSize="464,239" />
-      <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="486,1426">
+      <sap2010:ViewStateData Id="ForEachRow_1" sap:VirtualizedContainerService.HintSize="414,239" />
+      <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="436,1166">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -166,7 +150,7 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="TestDownloadTaskList_1" sap:VirtualizedContainerService.HintSize="526,1506" />
+      <sap2010:ViewStateData Id="TestDownloadTaskList_1" sap:VirtualizedContainerService.HintSize="476,1246" />
     </sap2010:ViewStateManager>
   </sap2010:WorkflowViewState.ViewStateManager>
 </Activity>

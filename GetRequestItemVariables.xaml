@@ -16,7 +16,6 @@
     <x:Property sap2010:Annotation.AnnotationText="Username for the basic authentication." sap2010:WorkflowViewState.IdRef="DynamicActivityProperty_2" Name="in_Username" Type="InArgument(x:String)" />
     <x:Property sap2010:Annotation.AnnotationText="Password for the basic authentication." sap2010:WorkflowViewState.IdRef="DynamicActivityProperty_3" Name="in_Password" Type="InArgument(x:String)" />
     <x:Property Name="out_Result" Type="OutArgument(scg:Dictionary(x:String, x:String))" />
-    <x:Property Name="out_StatusCode" Type="OutArgument(x:Int32)" />
     <x:Property sap2010:Annotation.AnnotationText="Unique identifier of the Request Item for which to retrieve the variables." Name="in_RequestItemID" Type="InArgument(x:String)" />
   </x:Members>
   <mva:VisualBasic.Settings>
@@ -89,7 +88,6 @@
         <InArgument x:TypeArguments="x:String" x:Key="in_InstanceURL">[in_InstanceURL]</InArgument>
         <InArgument x:TypeArguments="x:String" x:Key="in_Username">[in_Username]</InArgument>
         <InArgument x:TypeArguments="x:String" x:Key="in_Password">[in_Password]</InArgument>
-        <OutArgument x:TypeArguments="x:Int32" x:Key="out_StatusCode">[out_StatusCode]</OutArgument>
         <InArgument x:TypeArguments="x:String" x:Key="in_Query">["request_item=" + in_RequestItemID]</InArgument>
         <InArgument x:TypeArguments="x:String" x:Key="in_TableName">sc_item_option_mtom</InArgument>
         <OutArgument x:TypeArguments="njl:JArray" x:Key="out_Result">[VariablesJArray]</OutArgument>
@@ -121,7 +119,7 @@
         </ActivityAction>
       </ui:ForEach.Body>
     </ui:ForEach>
-    <sads:DebugSymbol.Symbol>d1JEOlxSUEEgUHJvamVjdHNcX015R29Db21wb25lbnRzXFNlcnZpY2VOb3dBUElTbmlwcGV0c1xHZXRSZXF1ZXN0SXRlbVZhcmlhYmxlcy54YW1sE1MDfQ4CAQFXBWIdAgELYwVqDgIBB2sFexICAQJZR1lXAgEZX0ZfVwIBF2BKYIoBAgEWWkRaUQIBFF1BXWUCARJcR1xXAgEQV7cBV8gBAgEPXkVeWAIBDltEW1ECAQxoSmhtAgEKZUtlVwIBCGuxA2vEAwIBBnELeBQCAQN2NnZdAgEFczdzeQIBBA==</sads:DebugSymbol.Symbol>
+    <sads:DebugSymbol.Symbol>d1JEOlxSUEEgUHJvamVjdHNcX015R29Db21wb25lbnRzXFNlcnZpY2VOb3dBUElTbmlwcGV0c1xHZXRSZXF1ZXN0SXRlbVZhcmlhYmxlcy54YW1sElIDew4CAQFWBWAdAgELYQVoDgIBB2kFeRICAQJYR1hXAgEXXUZdVwIBFV5KXooBAgEUWURZUQIBEltBW2UCARBWtwFWyAECAQ9cRVxYAgEOWkRaUQIBDGZKZm0CAQpjS2NXAgEIabEDacQDAgEGbwt2FAIBA3Q2dF0CAQVxN3F5AgEE</sads:DebugSymbol.Symbol>
   </Sequence>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>
